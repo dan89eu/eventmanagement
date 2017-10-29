@@ -1,0 +1,22 @@
+{
+  "name": "js-beautify",
+  "main": [
+    "./js/lib/beautify.js",
+    "./js/lib/beautify-css.js",
+    "./js/lib/beautify-html.js"
+  ],
+  "ignore": [
+    "**/.*"
+  ],
+  "homepage": "https://github.com/beautify-web/js-beautify",
+  "version": "1.6.13",
+  "_release": "1.6.13",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.6.13",
+    "commit": "3a93a24d28cb05e3e29ec7edab3c21aab80586b1"
+  },
+  "_source": "https://github.com/beautify-web/js-beautify.git",
+  "_target": "v1.6.13",
+  "_originalSource": "https://github.com/beautify-web/js-beautify.git"
+}

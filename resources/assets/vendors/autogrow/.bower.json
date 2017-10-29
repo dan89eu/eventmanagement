@@ -1,0 +1,13 @@
+{
+  "name": "autogrow",
+  "homepage": "https://github.com/petkaantonov/jQuery-autogrow",
+  "_release": "351d071d49",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "351d071d49fa404235de2542097abd5299a34a83"
+  },
+  "_source": "https://github.com/petkaantonov/jQuery-autogrow.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/petkaantonov/jQuery-autogrow.git"
+}
