@@ -19,6 +19,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- global css -->
 
+    @yield('header_styles1')
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css"/>
     <!-- font Awesome -->
 

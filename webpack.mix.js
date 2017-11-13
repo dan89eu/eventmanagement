@@ -158,6 +158,10 @@ const paths = {
 //copy frontend skins to public
 mix.copy(srcCss + 'frontend/skins', destCss + 'frontend/skins');
 
+mix.copy(srcCss + 'dhtmlx', destCss + 'dhtmlx');
+mix.copy(resourcesAssets + 'dhtmlx_lib', dest + 'dhtmlx_lib');
+mix.copy(srcJs + 'dhtmlx', destJs + 'dhtmlx');
+
 //simple-line-icons
 mix.copy(paths.simplelineicons + 'css/simple-line-icons.css', destVendors + 'simple-line-icons/css');
 mix.copy(paths.simplelineicons + 'fonts', destVendors + 'simple-line-icons/fonts');

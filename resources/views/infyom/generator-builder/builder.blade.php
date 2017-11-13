@@ -18,7 +18,6 @@
             display: none;
         }
         .txtFieldName{
-        text-transform: capitalize;
         }
     </style>
 @stop

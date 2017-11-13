@@ -195,7 +195,7 @@ return [
         \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
         \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
         \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
-
+	    Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
