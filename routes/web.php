@@ -63,7 +63,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], f
     Route::post('modelCheck', 'ModelcheckController@modelCheck');
 
     # Dashboard / Index
-    Route::get('/', 'JoshController@showHome')->name('dashboard');
+    Route::get('/calendar', 'JoshController@showHome')->name('dashboard');
     # crop demo
     Route::post('crop_demo', 'JoshController@crop_demo')->name('crop_demo');
     //Log viewer routes
