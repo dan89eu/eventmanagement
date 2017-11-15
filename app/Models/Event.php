@@ -69,12 +69,17 @@ class Event extends Model
 
 	public function contacts()
 	{
-		return $this->belongsToMany(Contact::class)->using(ContactEvent::class);
+		return $this->belongsToMany(Contact::class)->withTimestamps();
 	}
 
 	public function campaigns()
 	{
 		return $this->hasMany(Campaign::class);
+	}
+
+	public function category()
+	{
+		return $this->belongsTo(Category::class);
 	}
 
 

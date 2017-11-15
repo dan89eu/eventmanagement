@@ -9,6 +9,7 @@ Route::get('events', ['as'=> 'events.index', 'uses' => 'EventController@index'])
 Route::post('events', ['as'=> 'events.store', 'uses' => 'EventController@store']);
 	Route::get('events/create', ['as'=> 'events.create', 'uses' => 'EventController@create']);
 	Route::get('events/data', ['as'=> 'events.data', 'uses' => 'EventController@data']);
+	Route::post('events/data2', ['as'=> 'events.editdata', 'uses' => 'EventController@editData']);
 Route::put('events/{events}', ['as'=> 'events.update', 'uses' => 'EventController@update']);
 Route::patch('events/{events}', ['as'=> 'events.update', 'uses' => 'EventController@update']);
 Route::get('events/{id}/delete', array('as' => 'events.delete', 'uses' => 'EventController@getDelete'));

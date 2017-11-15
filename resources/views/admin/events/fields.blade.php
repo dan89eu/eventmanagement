@@ -56,6 +56,12 @@
     {!! Form::select('category_id', App\Models\Category::pluck('name','id'), null, ['class' => 'form-control select2', 'required']) !!}
 </div>
 
+<!-- Status Field -->
+<div class="form-group col-sm-12">
+    {!! Form::label('contacts', 'Contacts:') !!}
+    {!! Form::select('contacts[]', App\Models\Contact::pluck('first_name','id'), null, ['class' => 'form-control select2','multiple', 'required']) !!}
+</div>
+
 <!-- Submit Field -->
 <div class="form-group col-sm-12 text-center">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}

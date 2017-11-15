@@ -23,7 +23,9 @@ class Campaign extends Model
         'name',
         'user_id',
         'event_id',
-        'status'
+	    'status',
+	    'subject',
+	    'content'
     ];
 
     /**

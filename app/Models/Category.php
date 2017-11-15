@@ -43,7 +43,7 @@ class Category extends Model
     ];
 
 
-	protected $appends = ['value','label','autoemails'];
+	protected $appends = ['value','label'];
 
 	public static function boot()
 	{
@@ -72,9 +72,14 @@ class Category extends Model
 		return $this->hasMany(Email::class);
 	}
 
-	public function getAutoemailsAttribute()
+	public function events()
 	{
-		return $this->emails()->where('type','=',1);
+		return $this->hasMany(Event::class);
+	}
+
+	public function scopeAutoemails()
+	{
+		return $this->emails()->where('type','=',1)->orderBy('id');
 	}
 
 

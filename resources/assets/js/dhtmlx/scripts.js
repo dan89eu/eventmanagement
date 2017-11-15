@@ -1,27 +1,28 @@
 (function () {
-	scheduler.locale.labels.section_text = 'Name';
-	scheduler.locale.labels.section_room = 'Event';
-	scheduler.locale.labels.section_status = 'Status';
+	scheduler.locale.labels.section_text = 'Email Name';
+	scheduler.locale.labels.section_event = 'Event';
+	scheduler.locale.labels.section_status = 'Event Status';
 	scheduler.locale.labels.section_is_paid = 'Paid';
 	scheduler.locale.labels.section_time = 'Time';
+	scheduler.locale.labels.section_email = 'Email sent';
 	scheduler.xy.scale_height = 30;
-	scheduler.config.details_on_create = true;
-	scheduler.config.details_on_dblclick = true;
+	scheduler.config.details_on_create = false;
+	scheduler.config.details_on_dblclick = false;
+	scheduler.config.dblclick_create = false;
 	scheduler.config.prevent_cache = true;
 	scheduler.config.show_loading = true;
-	scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+	scheduler.config.xml_date = "%Y-%m-%d";
+	scheduler.config.drag_resize= false;
 
-	var roomsArr = scheduler.serverList("room");
-	var roomTypesArr = scheduler.serverList("roomType");
-	var roomStatusesArr = scheduler.serverList("roomStatus");
-	var bookingStatusesArr = scheduler.serverList("bookingStatus");
+	var eventsArr = scheduler.serverList("event");
+	var eventsTypesArr = scheduler.serverList("eventType");
+	var eventsStatusesArr = scheduler.serverList("eventStatus");
 
 	scheduler.config.lightbox.sections = [
-		{map_to: "text", name: "text", type: "textarea", height: 24},
-		{map_to: "room", name: "room", type: "select", options: scheduler.serverList("currentRooms")},
-		{map_to: "status", name: "status", type: "radio", options: scheduler.serverList("bookingStatus")},
-		{map_to: "is_paid", name: "is_paid", type: "checkbox", checked_value: true, unchecked_value: false},
-		{map_to: "time", name: "time", type: "calendar_time"}
+		{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
+		{map_to: "status", name: "status", type: "radio", options: scheduler.serverList("eventStatus")},
+		{map_to: "text", name: "text", type: "textarea", height: 26},
+		{map_to: "sent", name: "email", type: "checkbox", checked_value:true, unchecked_value:false},
 	];
 
 	scheduler.locale.labels.timeline_tab = 'Timeline';
@@ -29,7 +30,7 @@
 	scheduler.createTimelineView({
 		fit_events: true,
 		name: "timeline",
-		y_property: "room",
+		y_property: "event",
 		render: 'bar',
 		x_unit: "day",
 		x_date: "%d",
@@ -39,52 +40,63 @@
 		event_dy: "full",
 		round_position: true,
 
-		y_unit: scheduler.serverList("currentRooms"),
+		y_unit: scheduler.serverList("currentEvents"),
 		second_scale: {
 			x_unit: "month",
 			x_date: "%F %Y"
 		}
 	});
 
+	console.log(scheduler.serverList("currentEvents"));
+
 	function findInArray(array, key) {
 		for (var i = 0; i < array.length; i++) {
-			if (key == array[i].key)
+			if (key == array[i].id){
+				console.log(array[i]);
 				return array[i];
+			}
 		}
 		return null;
 	}
 
 	function getRoomType(key) {
-		return findInArray(roomTypesArr, key).label;
+
+		console.log(key,eventsTypesArr,findInArray(eventsTypesArr, key));
+
+		return findInArray(eventsTypesArr, key).name;
 	}
 
 	function getRoomStatus(key) {
-		return findInArray(roomStatusesArr, key);
+		return findInArray(eventsStatusesArr, key);
 	}
 
 	function getRoom(key) {
-		return findInArray(roomsArr, key);
+		return findInArray(eventsArr, key);
 	}
 
 	scheduler.templates.timeline_scale_label = function (key, label, section) {
+		console.log(key,label,section);
 		var roomStatus = getRoomStatus(section.status);
+		console.log(roomStatus);
 		return ["<div class='timeline_item_separator'></div>",
 			"<div class='timeline_item_cell'>" + label + "</div>",
 			"<div class='timeline_item_separator'></div>",
 			"<div class='timeline_item_cell'>" + getRoomType(section.type) + "</div>",
 			"<div class='timeline_item_separator'></div>",
 			"<div class='timeline_item_cell room_status'>",
-			"<span class='room_status_indicator room_status_indicator_" + roomStatus.key + "'></span>",
+			"<span class='room_status_indicator room_status_indicator_" + roomStatus.id + "'></span>",
 			"<span class='status-label'>" + roomStatus.label + "</span>",
 			"</div>"].join("");
 	};
 
 	scheduler.date.timeline_start = scheduler.date.month_start;
 	scheduler.date.add_timeline = function (date, step) {
+		console.log(date,step);
 		return scheduler.date.add(date, step, "month");
 	};
 
 	scheduler.attachEvent("onBeforeViewChange", function (old_mode, old_date, mode, date) {
+		console.log(old_mode, old_date, mode, date);
 		var year = date.getFullYear();
 		var month = (date.getMonth() + 1);
 		var d = new Date(year, month, 0);
@@ -110,21 +122,19 @@
 	scheduler.templates.event_bar_text = function (start, end, event) {
 		var paidStatus = getPaidStatus(event.is_paid);
 		var startDate = eventDateFormat(event.start_date);
-		var endDate = eventDateFormat(event.end_date);
-		return [event.text + "<br />",
-			startDate + " - " + endDate,
-			"<div class='booking_status booking-option'>" + getBookingStatus(event.status) + "</div>"].join("");
+		return "";//[event.text + "<br />","<div class='booking_status booking-option'>" + getRoomStatus(event.status).label + "</div>"].join("");
 	};
 
 	scheduler.templates.tooltip_text = function (start, end, event) {
-		var room = getRoom(event.room) || {label: ""};
+		var room = getRoom(event.event) || {label: ""};
+
+		console.log(event);
 
 		var html = [];
 		html.push("Detail: <b>" + event.text + "</b>");
 		html.push("Event: <b>" + room.label + "</b>");
-		html.push("Start: <b>" + eventDateFormat(start) + "</b>");
-		html.push("End: <b>" + eventDateFormat(end) + "</b>");
-		html.push(getBookingStatus(event.status));
+		html.push("Date: <b>" + eventDateFormat(start) + "</b>");
+		html.push(room.sent);
 		return html.join("<br>")
 	};
 
@@ -154,17 +164,23 @@
 	scheduler.addMarkedTimespan({days: [0, 6], zones: "fullday", css: "timeline_weekend"});
 
 	window.updateSections = function updateSections(value) {
-		var currentRoomsArr = [];
+
+		console.log(value);
+		console.log(eventsArr.slice());
+
+		var currenteventsArr = [];
 		if (value == 'all') {
-			scheduler.updateCollection("currentRooms", roomsArr.slice());
+			scheduler.updateCollection("currentEvents", eventsArr.slice());
+
+			console.log(scheduler.serverList("currentEvents"));
 			return
 		}
-		for (var i = 0; i < roomsArr.length; i++) {
-			if (value == roomsArr[i].type) {
-				currentRoomsArr.push(roomsArr[i]);
+		for (var i = 0; i < eventsArr.length; i++) {
+			if (value == eventsArr[i].type) {
+				currenteventsArr.push(eventsArr[i]);
 			}
 		}
-		scheduler.updateCollection("currentRooms", currentRoomsArr);
+		scheduler.updateCollection("currentEvents", currenteventsArr);
 	};
 
 	scheduler.attachEvent("onXLE", function () {
@@ -172,7 +188,7 @@
 
 		var select = document.getElementById("room_filter");
 		var selectHTML = ["<option value='all'>All</option>"];
-		for (var i = 1; i < roomTypesArr.length + 1; i++) {
+		for (var i = 1; i < eventsTypesArr.length + 1; i++) {
 			selectHTML.push("<option value='" + i + "'>" + getRoomType(i) + "</option>");
 		}
 		select.innerHTML = selectHTML.join("");
@@ -186,6 +202,19 @@
 		return true;
 	});
 
+	scheduler.attachEvent("onLightbox", function(){
+		var section = scheduler.formSection("text");
+		section.control.disabled = true;
+		var section = scheduler.formSection("event");
+		section.control.disabled = true;
+		var section = scheduler.formSection("event");
+		section.control.disabled = true;
+	});
+
+	/*scheduler.attachEvent("onYScaleDblClick", function(index,section,event){
+		console.log(index,section,event);
+	});*/
+
 	window.onload = function(){
 		console.log("body load");
 		init();
@@ -194,9 +223,9 @@
 })();
 
 function init() {
-	scheduler.init('scheduler_here', new Date(2017,2,1), "timeline");
-	scheduler.load("./data.php", "json");
-	window.dp = new dataProcessor("./data.php");
+	scheduler.init('scheduler_here', new Date(), "timeline");
+	scheduler.load("events/data", "json");
+	window.dp = new dataProcessor("events/data2");
 	dp.init(scheduler);
 
 

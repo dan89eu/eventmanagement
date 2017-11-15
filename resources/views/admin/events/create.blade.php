@@ -7,6 +7,8 @@ Event
 @section('header_styles')
 <link href="{{ asset('assets/vendors/daterangepicker/css/daterangepicker.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/vendors/datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/vendors/select2/css/select2.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/vendors/select2/css/select2-bootstrap.css') }}" rel="stylesheet" />
 @stop
 @section('content')
 @include('core-templates::common.errors')
@@ -46,11 +48,16 @@ Event
 <!-- begining of page level js -->
 <script src="{{ asset('assets/vendors/moment/js/moment.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/vendors/daterangepicker/js/daterangepicker.js') }}" type="text/javascript"></script>
-
+<script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/select2/js/select2.js') }}"></script>
 <!-- end of page level js -->
 
 <script type="text/javascript">
         $(document).ready(function() {
+	        $(".select2").select2({
+		        theme:"bootstrap",
+		        placeholder:"Select a value"
+	        });
+
             $("form").submit(function() {
                 $('input[type=submit]').attr('disabled', 'disabled');
                 return true;

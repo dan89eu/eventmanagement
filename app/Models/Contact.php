@@ -65,7 +65,7 @@ class Contact extends Model
 
 	public function events()
 	{
-		return $this->belongsToMany(Event::class)->using(ContactEvent::class);
+		return $this->belongsToMany(Event::class)->withTimestamps();
 	}
 
 }
