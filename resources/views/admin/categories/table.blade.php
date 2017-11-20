@@ -10,7 +10,7 @@
     @foreach($categories as $category)
         <tr>
             <td>{!! $category->name !!}</td>
-            <td>{!! $category->autoemails->count() !!}</td>
+            <td>{!! $category->autoemails()->count()??0 !!}</td>
             <td>
                  <a href="{{ route('admin.categories.show', $category->id) }}">
                      <i class="livicon" data-name="info" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="view category"></i>
