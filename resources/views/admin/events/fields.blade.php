@@ -41,7 +41,7 @@
 <!-- Details Field -->
 <div class="form-group col-sm-12">
     {!! Form::label('details', 'Details:') !!}
-    {!! Form::text('details', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('details', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Status Field -->

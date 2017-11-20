@@ -1,9 +1,9 @@
 <table class="table table-responsive" id="events-table" width="100%">
     <thead>
      <tr>
+         <th>Name</th>
         <th>Start Date</th>
         <th>End Date</th>
-        <th>Name</th>
         <th>Status</th>
         <th >Action</th>
      </tr>
@@ -11,9 +11,9 @@
     <tbody>
     @foreach($events as $event)
         <tr>
+            <td>{!! $event->name !!}</td>
             <td>{!! $event->start_date !!}</td>
             <td>{!! $event->end_date !!}</td>
-            <td>{!! $event->name !!}</td>
             <td>{!! $event->status !!}</td>
             <td>
                  <a href="{{ route('admin.events.show', $event->id) }}">
