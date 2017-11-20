@@ -158,9 +158,9 @@ const paths = {
 //copy frontend skins to public
 mix.copy(srcCss + 'frontend/skins', destCss + 'frontend/skins');
 
-mix.copy(srcCss + 'dhtmlx', destCss + 'dhtmlx');
+mix.copy(srcCss + 'dhtmlx', destCss + 'dhtmlx').version();
 mix.copy(resourcesAssets + 'dhtmlx_lib', dest + 'dhtmlx_lib');
-mix.copy(srcJs + 'dhtmlx', destJs + 'dhtmlx');
+mix.copy(srcJs + 'dhtmlx', destJs + 'dhtmlx').version();
 
 //simple-line-icons
 mix.copy(paths.simplelineicons + 'css/simple-line-icons.css', destVendors + 'simple-line-icons/css');

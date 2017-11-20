@@ -9,7 +9,7 @@ Calendar
 {{-- page level styles --}}
 @section('header_styles')
 <link href="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/dhtmlxscheduler.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/css/dhtmlx/styles.css') }}" rel="stylesheet" />
+<link href="{{ mix('assets/css/dhtmlx/styles.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/vendors/daterangepicker/css/daterangepicker.css') }}" rel="stylesheet" type="text/css" />
 
 @stop
@@ -63,5 +63,5 @@ Calendar
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_editors.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_minical.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_tooltip.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ asset('assets/js/dhtmlx/scripts.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ mix('assets/js/dhtmlx/scripts.js') }}"></script>
 @stop
