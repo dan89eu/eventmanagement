@@ -32,7 +32,7 @@
 		name: "timeline",
 		y_property: "event",
 		render: 'bar',
-		x_unit: "month",
+		x_unit: "day",
 		x_date: "%d",
 		x_size: 100,
 		dy: 30,
@@ -42,7 +42,7 @@
 
 		y_unit: scheduler.serverList("currentEvents"),
 		second_scale: {
-			x_unit: "year",
+			x_unit: "month",
 			x_date: "%F %Y"
 		}
 	});

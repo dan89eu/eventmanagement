@@ -64,6 +64,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], f
 
     # Dashboard / Index
     Route::get('/calendar', 'JoshController@showHome')->name('dashboard');
+	Route::get('/', ['as' => 'index', function () {
+		return view('admin.index');
+	}]);
     # crop demo
     Route::post('crop_demo', 'JoshController@crop_demo')->name('crop_demo');
     //Log viewer routes
