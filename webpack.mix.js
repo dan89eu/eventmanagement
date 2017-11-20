@@ -158,9 +158,10 @@ const paths = {
 //copy frontend skins to public
 mix.copy(srcCss + 'frontend/skins', destCss + 'frontend/skins');
 
-mix.copy(srcCss + 'dhtmlx', destCss + 'dhtmlx').version();
-mix.copy(resourcesAssets + 'dhtmlx_lib', dest + 'dhtmlx_lib');
-mix.copy(srcJs + 'dhtmlx', destJs + 'dhtmlx').version();
+mix.copy(srcCss + 'dhtmlx', destCss + 'dhtmlx',false);
+mix.copy(resourcesAssets + 'dhtmlx_lib', dest + 'dhtmlx_lib',false);
+mix.copy(srcJs + 'dhtmlx', destJs + 'dhtmlx',false);
+mix.version([destCss + 'dhtmlx/styles.css',destJs + 'dhtmlx/scripts.js']);
 
 //simple-line-icons
 mix.copy(paths.simplelineicons + 'css/simple-line-icons.css', destVendors + 'simple-line-icons/css');
@@ -1054,4 +1055,6 @@ mix.combine(
         srcJs + 'livicons-1.4.min.js',
         srcJs + 'frontend/josh_frontend.js'
     ], destJs + 'frontend/lib.js');
+
+mix.version();
 
