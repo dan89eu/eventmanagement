@@ -31,9 +31,9 @@
                     <div id="wrapper">
                         <div id="login" class="animate form">
                             <form action="{{ route('signin') }}" autocomplete="on" method="post" role="form" id="login_form">
-                                <h3 class="black_bg">
+                                <h3 class="">
                                     <img src="{{ asset('assets/img/logo.png') }}" alt="josh logo">
-                                    <br>Log In</h3>
+                                    </h3>
                                     <!-- CSRF Token -->
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                 <div class="form-group {{ $errors->first('email', 'has-error') }}">

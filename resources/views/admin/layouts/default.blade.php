@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>
         @section('title')
-            | Josh Admin Template
+            | Event Management by DriveProfit
         @show
     </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -93,13 +93,6 @@
                         </li>
                         <!-- Menu Body -->
                         <li>
-                            <a href="{{ URL::route('admin.users.show',Sentinel::getUser()->id) }}">
-                                <i class="livicon" data-name="user" data-s="18"></i>
-                                My Profile
-                            </a>
-                        </li>
-                        <li role="presentation"></li>
-                        <li>
                             <a href="{{ route('admin.users.edit', Sentinel::getUser()->id) }}">
                                 <i class="livicon" data-name="gears" data-s="18"></i>
                                 Account Settings
@@ -131,35 +124,6 @@
     <aside class="left-side ">
         <section class="sidebar ">
             <div class="page-sidebar  sidebar-nav">
-                <div class="nav_icons">
-                    <ul class="sidebar_threeicons">
-                        <li>
-                            <a href="{{ URL::to('admin/advanced_tables') }}">
-                                <i class="livicon" data-name="table" title="Advanced tables" data-loop="true"
-                                   data-color="#418BCA" data-hc="#418BCA" data-s="25"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::to('admin/tasks') }}">
-                                <i class="livicon" data-name="list-ul" title="Tasks" data-loop="true"
-                                   data-color="#e9573f" data-hc="#e9573f" data-s="25"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::to('admin/gallery') }}">
-                                <i class="livicon" data-name="image" title="Gallery" data-loop="true"
-                                   data-color="#F89A14" data-hc="#F89A14" data-s="25"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ URL::to('admin/users') }}">
-                                <i class="livicon" data-name="user" title="Users" data-loop="true"
-                                   data-color="#6CC66C" data-hc="#6CC66C" data-s="25"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
                 <!-- BEGIN SIDEBAR MENU -->
                 @include('admin.layouts._left_menu')
                 <!-- END SIDEBAR MENU -->
