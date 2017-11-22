@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/pages/login.css') }}" />
     <link href="{{ asset('assets/vendors/iCheck/css/square/blue.css') }}" rel="stylesheet"/>
     <!-- end of page level css -->
-
 </head>
 
 <body>
