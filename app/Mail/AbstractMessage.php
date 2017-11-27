@@ -18,7 +18,7 @@
 	use Illuminate\Container\Container;
 	use Illuminate\Contracts\Mail\Mailer as MailerContract;
 
-	abstract class AbstractMessage extends Mailable implements ShouldQueue
+	abstract class AbstractMessage extends Mailable
 	{
 		use Queueable, SerializesModels;
 		/**
