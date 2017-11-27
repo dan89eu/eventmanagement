@@ -7,7 +7,7 @@
         </a>
     </li>
     <li {!! (Request::is('admin/dhtmlx') ? 'class="active"' : '') !!}>
-    <a href="{{  URL::to('admin/dhtmlx') }}">
+    <a href="{{  route('mailTracker_Index') }}">
         <i class="livicon" data-c="#F89A14" data-hc="#F89A14" data-name="calendar" data-size="18"
            data-loop="true"></i>
         Calendar

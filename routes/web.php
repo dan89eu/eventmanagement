@@ -1,5 +1,8 @@
 <?php
-include_once 'web_builder.php';
+
+	use Illuminate\Support\Facades\Route;
+
+	include_once 'web_builder.php';
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,7 +60,7 @@ Route::group(['prefix' => 'admin', 'namespace'=>'Admin'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], function () {
     # GUI Crud Generator
     Route::get('generator_builder', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@builder');
-    Route::get('field_template', '\InfyOm\GeneratorBuilder\Coeb initntrollers\GeneratorBuilderController@fieldTemplate');
+    Route::get('field_template', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@fieldTemplate');
     Route::post('generator_builder/generate', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@generate');
     // Model checking
     Route::post('modelCheck', 'ModelcheckController@modelCheck');
@@ -196,6 +199,7 @@ Route::post('contact', 'FrontEndController@postContact')->name('contact');
 
 #frontend views
 Route::get('/', ['as' => 'home', function () {
+	dd();
     return view('index');
 }]);
 
@@ -204,5 +208,32 @@ Route::get('blog/{slug}/tag', 'BlogController@getBlogTag');
 Route::get('blogitem/{slug?}', 'BlogController@getBlog');
 Route::post('blogitem/{blog}/comment', 'BlogController@storeComment');
 
-Route::get('{name?}', 'FrontEndController@showFrontEndView');
 # End of frontend views
+	Route::get('routes', function() {
+		$routeCollection = Route::getRoutes();
+
+		echo "<table style='width:100%'>";
+		echo "<tr>";
+		echo "<td width='10%'><h4>uri</h4></td>";
+		echo "<td width='10%'><h4>name</h4></td>";
+		echo "<td width='10%'><h4>prefix</h4></td>";
+		echo "<td width='70%'><h4>Corresponding Action</h4></td>";
+		echo "<td width='70%'><h4>controller</h4></td>";
+		echo "<td width='70%'><h4>gatherMiddleware</h4></td>";
+		echo "</tr>";
+		foreach ($routeCollection as $value) {
+			echo "<tr>";
+			echo "<td>" . $value->uri . "</td>";
+			echo "<td>" . $value->getName() . "</td>";
+			echo "<td>" . $value->getPrefix() . "</td>";
+			echo "<td>" . $value->getActionMethod() . "</td>";
+			echo "<td>" . $value->getActionName() . "</td>";
+			echo "<td>" . join("; ",$value->gatherMiddleware()) . "</td>";
+
+			echo "</tr>";
+		}
+		echo "</table>";
+	});
+
+
+	Route::get('{name?}', 'FrontEndController@showFrontEndView');

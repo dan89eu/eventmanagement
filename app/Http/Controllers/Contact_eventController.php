@@ -9,7 +9,7 @@ use App\Repositories\Contact_eventRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
-use App\Models\Contact_event;
+use App\Models\ContactEvent;
 use Flash;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
@@ -152,7 +152,7 @@ class Contact_eventController extends InfyOmBaseController
 
        public function getDelete($id = null)
        {
-           $sample = Contact_event::destroy($id);
+           $sample = ContactEvent::destroy($id);
 
            // Redirect to the group management page
            return redirect(route('admin.contactEvents.index'))->with('success', Lang::get('message.success.delete'));

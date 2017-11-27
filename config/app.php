@@ -196,6 +196,7 @@ return [
         \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
         \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
 	    Barryvdh\Debugbar\ServiceProvider::class,
+	    jdavidbakr\MailTracker\MailTrackerServiceProvider::class,
 
     ],
 

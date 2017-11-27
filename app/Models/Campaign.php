@@ -81,4 +81,10 @@ class Campaign extends Model
 	{
 		return $this->name;
 	}
+
+	public function events()
+	{
+		return $this->belongsTo(Event::class, 'event_id','id');
+	}
+
 }

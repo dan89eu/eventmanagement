@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Contact_event;
+use App\Models\ContactEvent;
 use InfyOm\Generator\Common\BaseRepository;
 
 class Contact_eventRepository extends BaseRepository
@@ -21,6 +21,6 @@ class Contact_eventRepository extends BaseRepository
      **/
     public function model()
     {
-        return Contact_event::class;
+        return ContactEvent::class;
     }
 }

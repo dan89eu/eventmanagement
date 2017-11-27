@@ -16,7 +16,7 @@
             <td>{!! $campaign->name !!}</td>
             <td>{!! $campaign->user_id !!}</td>
             <td>{!! $campaign->event_id !!}</td>
-            <td>{!! $campaign->status !!}</td>
+            <td>{!! $campaign->events->contacts !!}</td>
             <td>
                  <a href="{{ route('admin.campaigns.show', $campaign->id) }}">
                      <i class="livicon" data-name="info" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="view campaign"></i>

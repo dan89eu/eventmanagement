@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
+        'jdavidbakr\MailTracker\Events\ViewEmailEvent' => [
+	        'App\Listeners\EmailViewed',
+        ],
+        'jdavidbakr\MailTracker\Events\LinkClickedEvent' => [
+	        'App\Listeners\LinkClicked',
+        ],
     ];
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Contact_event;
+use App\Models\ContactEvent;
 
 class CreateContact_eventRequest extends FormRequest
 {
@@ -25,6 +25,6 @@ class CreateContact_eventRequest extends FormRequest
      */
     public function rules()
     {
-        return Contact_event::$rules;
+        return ContactEvent::$rules;
     }
 }
