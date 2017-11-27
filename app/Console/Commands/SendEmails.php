@@ -40,12 +40,18 @@ class SendEmails extends Command
      */
     public function handle()
     {
-        $campaigns = Campaign::where('sent',0)->where('date','<=',date('Y-m-d'))->get();
+        $campaigns = Campaign::where('event_id',7)->where('date','<=',date('Y-m-d'))->get();
 
+	    activity('emails:send')
+		    ->performedOn(new Campaign())
+		    ->log('count:'.count($campaigns));
+
+	    $count = 0;
 
         foreach ($campaigns as $campaign){
 
 
+        	$count++;
 	        /*Mail::queue('emails.event',['campaign'=>$campaign],function($message) use($campaign){
 	        	$message->from('dan@driveprofit.com');
 	        	$message->to('dan@driveprofit.com');
@@ -62,5 +68,9 @@ class SendEmails extends Command
 	        $campaign->status = 2;
 	        $campaign->save();
         }
+
+	    activity('emails:send')
+		    ->performedOn(new Campaign())
+		    ->log('sent:'.$count);
     }
 }
