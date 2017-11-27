@@ -197,7 +197,6 @@ return [
         \InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
 	    Barryvdh\Debugbar\ServiceProvider::class,
 	    jdavidbakr\MailTracker\MailTrackerServiceProvider::class,
-
     ],
 
     /*
