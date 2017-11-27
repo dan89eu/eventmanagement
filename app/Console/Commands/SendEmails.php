@@ -40,7 +40,7 @@ class SendEmails extends Command
      */
     public function handle()
     {
-        $campaigns = Campaign::where('event_id',7)->where('date','<=',date('Y-m-d'))->get();
+        $campaigns = Campaign::where('sent',0)->where('date','<=',date('Y-m-d'))->get();
 
 	    activity('emails:send')
 		    ->performedOn(new Campaign())
