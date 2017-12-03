@@ -27,6 +27,15 @@ return [
 
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
+        'guzzle' => [
+	        'verify' => true,
+	        'decode_content' => true,
+        ],
+        'options' => [
+	        'open_tracking' => true,
+	        'click_tracking' => true,
+	        'transactional' => true,
+        ],
     ],
 
     'stripe' => [
