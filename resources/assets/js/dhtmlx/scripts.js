@@ -14,6 +14,7 @@
 	scheduler.config.xml_date = "%Y-%m-%d";
 	scheduler.config.drag_resize= false;
 
+
 	var eventsArr = scheduler.serverList("event");
 	var eventsTypesArr = scheduler.serverList("eventType");
 	var eventsStatusesArr = scheduler.serverList("eventStatus");
@@ -39,7 +40,7 @@
 		render: 'bar',
 		x_unit: "day",
 		x_date: "%d",
-		x_size: 100,
+		x_size: 90,
 		dy: 30,
 		dx: 250,
 		event_dy: "full",
@@ -95,6 +96,20 @@
 			"</div>"].join("");
 	};
 
+	/*scheduler.templates.timeline_scale_date = function (date) {
+		var timeline = scheduler.matrix.timeline;
+		var func=scheduler.date.date_to_str(timeline.x_date||scheduler.config.hour_date);
+		if(date.getDay()==1)
+		return func(date);
+		else return "";
+	};
+
+	scheduler.templates.timeline_scalex_class = function(date){
+		if(date.getDay()==1)
+			return func(date);
+		else return "";
+	};*/
+
 	scheduler.date.timeline_start = scheduler.date.month_start;
 	scheduler.date.add_timeline = function (date, step) {
 		console.log(date,step);
@@ -107,7 +122,7 @@
 		var month = (date.getMonth() + 1);
 		var d = new Date(year, month, 0);
 		var daysInMonth = d.getDate();
-		scheduler.matrix["timeline"].x_size = daysInMonth;
+		//scheduler.matrix["timeline"].x_size = daysInMonth;
 		return true;
 	});
 
