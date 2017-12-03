@@ -76,10 +76,14 @@
 }
 
 .event_3 {
-	background-color: #40C4FF !important;
+	background-color: #9CCC65 !important;
 }
 
 .event_4 {
+	background-color: #9CCC65 !important;
+}
+
+.event_5 {
 	background-color: #FFB74D !important;
 }
 
@@ -89,7 +93,7 @@
 }
 
 .booking_status {
-	top: 2px;
+	bottom: 2px;
 }
 
 .booking_paid {

@@ -18,6 +18,11 @@
 	var eventsTypesArr = scheduler.serverList("eventType");
 	var eventsStatusesArr = scheduler.serverList("eventStatus");
 
+	var evs = scheduler.getEvents();
+	for (var i=0; i<evs.length; i++){
+		console.log(evs[i]);
+	}
+
 	scheduler.config.lightbox.sections = [
 		{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
 		{map_to: "status", name: "status", type: "radio", options: scheduler.serverList("eventStatus")},
@@ -48,6 +53,7 @@
 	});
 
 	console.log(scheduler.serverList("currentEvents"));
+	console.log(scheduler.getEvents());
 
 	function findInArray(array, key) {
 		for (var i = 0; i < array.length; i++) {
@@ -122,7 +128,14 @@
 	scheduler.templates.event_bar_text = function (start, end, event) {
 		var paidStatus = getPaidStatus(event.is_paid);
 		var startDate = eventDateFormat(event.start_date);
-		return "";//[event.text + "<br />","<div class='booking_status booking-option'>" + getRoomStatus(event.status).label + "</div>"].join("");
+		if(event.status==4){
+			return "<div class='booking_status booking-option'>&#10003;&#10003;</div>";
+		}else if(event.status==3){
+			return "<div class='booking_status booking-option'>&#10003;</div>";
+		}
+
+		return "";
+
 	};
 
 	scheduler.templates.tooltip_text = function (start, end, event) {
@@ -159,6 +172,7 @@
 		ev.status = 1;
 		ev.is_paid = false;
 		ev.text = 'new booking';
+		console.log(ev);
 	});
 
 	scheduler.addMarkedTimespan({days: [0, 6], zones: "fullday", css: "timeline_weekend"});
@@ -173,6 +187,7 @@
 			scheduler.updateCollection("currentEvents", eventsArr.slice());
 
 			console.log(scheduler.serverList("currentEvents"));
+			console.log(scheduler.getEvents());
 			return
 		}
 		for (var i = 0; i < eventsArr.length; i++) {
