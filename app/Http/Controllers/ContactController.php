@@ -7,6 +7,7 @@ use App\Http\Requests\CreateContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Repositories\ContactRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Models\Contact;
@@ -34,7 +35,13 @@ class ContactController extends InfyOmBaseController
     {
 
         $this->contactRepository->pushCriteria(new RequestCriteria($request));
-        $contacts = $this->contactRepository->all();
+	    if(Sentinel::inRole('admin')){
+		    $contacts = $this->contactRepository->all();
+	    }
+	    else{
+		    $contacts = $this->contactRepository->findByField('user_id',$this->getUserId());
+	    }
+
         return view('admin.contacts.index')
             ->with('contacts', $contacts);
     }
@@ -78,10 +85,15 @@ class ContactController extends InfyOmBaseController
     {
         $contact = $this->contactRepository->findWithoutFail($id);
 
+
+	    if($contact->user_id != $this->getUserId()){
+		    unset($contact);
+	    }
+
         if (empty($contact)) {
             Flash::error('Contact not found');
 
-            return redirect(route('contacts.index'));
+            return redirect(route('admin.contacts.index'));
         }
 
         return view('admin.contacts.show')->with('contact', $contact);
@@ -97,6 +109,11 @@ class ContactController extends InfyOmBaseController
     public function edit($id)
     {
         $contact = $this->contactRepository->findWithoutFail($id);
+
+
+	    if($contact->user_id != $this->getUserId()){
+		    unset($contact);
+	    }
 
         if (empty($contact)) {
             Flash::error('Contact not found');
@@ -119,7 +136,10 @@ class ContactController extends InfyOmBaseController
     {
         $contact = $this->contactRepository->findWithoutFail($id);
 
-        
+
+	    if($contact->user_id != $this->getUserId()){
+		    unset($contact);
+	    }
 
         if (empty($contact)) {
             Flash::error('Contact not found');

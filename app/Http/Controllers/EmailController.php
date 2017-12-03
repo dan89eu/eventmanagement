@@ -7,6 +7,9 @@ use App\Http\Requests\CreateEmailRequest;
 use App\Http\Requests\UpdateEmailRequest;
 use App\Repositories\EmailRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Models\Email;
@@ -34,9 +37,32 @@ class EmailController extends InfyOmBaseController
     {
 
         $this->emailRepository->pushCriteria(new RequestCriteria($request));
-        $emails = $this->emailRepository->all();
+
+	    if(Sentinel::inRole('admin')){
+		    $emails = $this->emailRepository->all();
+	    }
+	    else{
+		    $emails = $this->emailRepository->findByField('user_id',$this->getUserId());
+	    }
+
         return view('admin.emails.index')
             ->with('emails', $emails);
+    }
+
+    public function test(){
+    	$client = new Client();
+	    $response = $client->post('https://api.sparkpost.com/api/v1/transmissions', [
+		    'headers' => [
+			    'Authorization' => $this->key,
+		    ],
+		    'json' => array_merge([
+			    'recipients' => ['dan@driveprofit.com'],
+			    'content' => [
+				    'email_rfc822' => 'salut',
+			    ],
+		    ], $this->options),
+	    ]);
+	    var_dump($response);
     }
 
     /**
@@ -78,10 +104,14 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
+	    if($email->user_id != $this->getUserId()){
+		    unset($email);
+	    }
+
         if (empty($email)) {
             Flash::error('Email not found');
 
-            return redirect(route('emails.index'));
+            return redirect(route('admin.emails.index'));
         }
 
         return view('admin.emails.show')->with('email', $email);
@@ -98,6 +128,9 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
+	    if($email->user_id != $this->getUserId()){
+		    unset($email);
+	    }
         if (empty($email)) {
             Flash::error('Email not found');
 
@@ -119,6 +152,9 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
+	    if($email->user_id != $this->getUserId()){
+		    unset($email);
+	    }
         
                         if($request->has('type')){
 	                    $request->merge(['type' => 1]);

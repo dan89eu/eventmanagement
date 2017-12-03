@@ -9,6 +9,8 @@ use App\Mail\EventDate;
 use App\Models\Campaign;
 use App\Models\Category;
 use App\Models\EventStatus;
+use App\Repositories\CampaignRepository;
+use App\Repositories\CategoryRepository;
 use App\Repositories\EventRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
 use Carbon\Carbon;
@@ -26,11 +28,15 @@ use Dhtmlx\Connector\SchedulerConnector;
 class EventController extends InfyOmBaseController
 {
     /** @var  EventRepository */
-    private $eventRepository;
+	private $eventRepository;
+	private $campaignRepository;
+	private $categoryRepository;
 
-    public function __construct(EventRepository $eventRepo)
+    public function __construct(EventRepository $eventRepo, CampaignRepository $campaignRepo, CategoryRepository $categoryRepo)
     {
-        $this->eventRepository = $eventRepo;
+	    $this->eventRepository = $eventRepo;
+	    $this->campaignRepository = $campaignRepo;
+	    $this->categoryRepository = $categoryRepo;
     }
 
     /**
@@ -43,7 +49,13 @@ class EventController extends InfyOmBaseController
     {
 
         $this->eventRepository->pushCriteria(new RequestCriteria($request));
-        $events = $this->eventRepository->all();
+	    if(Sentinel::inRole('admin')){
+		    $events = $this->eventRepository->all();
+	    }
+	    else{
+		    $events = $this->eventRepository->findByField('user_id',$this->getUserId());
+	    }
+
         return view('admin.events.index')
             ->with('events', $events);
     }
@@ -51,9 +63,17 @@ class EventController extends InfyOmBaseController
 	public function data()
 	{
 
-		$eventsArr = Event::all();
-		$campaignArr = Campaign::all();
-		$categoryArr = Category::all();
+		if(Sentinel::inRole('admin')){
+			$eventsArr = $this->eventRepository->all();
+			$campaignArr = $this->campaignRepository->all();
+			$categoryArr = $this->categoryRepository->all();
+		}
+		else{
+			$eventsArr = $this->eventRepository->findByField('user_id',$this->getUserId());
+			$campaignArr = $this->campaignRepository->findByField('user_id',$this->getUserId());
+			$categoryArr = $this->categoryRepository->findByField('user_id',$this->getUserId());
+		}
+
 		$eventStatusArr = EventStatus::all(['id','value','name']);
 
 		foreach($eventsArr as $event){
@@ -157,10 +177,14 @@ class EventController extends InfyOmBaseController
     {
         $event = $this->eventRepository->findWithoutFail($id);
 
+        if($event->user_id != $this->getUserId()){
+        	unset($event);
+        }
+
         if (empty($event)) {
             Flash::error('Event not found');
 
-            return redirect(route('events.index'));
+            return redirect(route('admin.events.index'));
         }
 
         return view('admin.events.show')->with('event', $event);
@@ -176,6 +200,10 @@ class EventController extends InfyOmBaseController
     public function edit($id)
     {
         $event = $this->eventRepository->findWithoutFail($id);
+
+	    if($event->user_id != $this->getUserId()){
+		    unset($event);
+	    }
 
         if (empty($event)) {
             Flash::error('Event not found');
@@ -197,6 +225,10 @@ class EventController extends InfyOmBaseController
     public function update($id, UpdateEventRequest $request)
     {
         $event = $this->eventRepository->findWithoutFail($id);
+
+	    if($event->user_id != $this->getUserId()){
+		    unset($event);
+	    }
 
         if (empty($event)) {
             Flash::error('Event not found');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use InfyOm\Generator\Utils\ResponseUtil;
 use App\Http\Controllers\Controller as LaravelController;
 use Response;
@@ -22,5 +23,9 @@ class AppBaseController extends LaravelController
     public function sendResponse($result, $message)
     {
         return Response::json(ResponseUtil::makeResponse($message, $result));
+    }
+
+    public function getUserId(){
+    	return Sentinel::getUser()->id;
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\CreateCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\CategoryRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Models\Category;
@@ -34,7 +35,14 @@ class CategoryController extends InfyOmBaseController
     {
 
         $this->categoryRepository->pushCriteria(new RequestCriteria($request));
-        $categories = $this->categoryRepository->all();
+
+	    if(Sentinel::inRole('admin')){
+		    $categories = $this->categoryRepository->all();
+	    }
+	    else{
+		    $categories = $this->categoryRepository->findByField('user_id',$this->getUserId());
+	    }
+
         return view('admin.categories.index')
             ->with('categories', $categories);
     }
@@ -78,10 +86,14 @@ class CategoryController extends InfyOmBaseController
     {
         $category = $this->categoryRepository->findWithoutFail($id);
 
+	    if($category->user_id != $this->getUserId()){
+		    unset($category);
+	    }
+
         if (empty($category)) {
             Flash::error('Category not found');
 
-            return redirect(route('categories.index'));
+            return redirect(route('admin.categories.index'));
         }
 
         return view('admin.categories.show')->with('category', $category);
@@ -97,6 +109,10 @@ class CategoryController extends InfyOmBaseController
     public function edit($id)
     {
         $category = $this->categoryRepository->findWithoutFail($id);
+
+	    if($category->user_id != $this->getUserId()){
+		    unset($category);
+	    }
 
         if (empty($category)) {
             Flash::error('Category not found');
@@ -119,6 +135,9 @@ class CategoryController extends InfyOmBaseController
     {
         $category = $this->categoryRepository->findWithoutFail($id);
 
+	    if($category->user_id != $this->getUserId()){
+		    unset($category);
+	    }
         
 
         if (empty($category)) {
