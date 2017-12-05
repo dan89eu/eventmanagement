@@ -29,3 +29,4 @@ class AppBaseController extends LaravelController
     	return Sentinel::getUser()->id;
     }
 }
+
