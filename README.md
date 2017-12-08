@@ -1,0 +1,2 @@
+# eventmanagement
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/87e784bff378489abc61c10d8f0e0b33)](https://www.codacy.com/app/dan89_eu/eventmanagement?utm_source=github.com&utm_medium=referral&utm_content=dan89eu/eventmanagement&utm_campaign=badger)
