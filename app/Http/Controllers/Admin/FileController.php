@@ -15,33 +15,59 @@ use stdClass;
 
 class FileController extends JoshController {
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param FileUploadRequest $request
-     * @return Response
-     */
-    public function store(FileUploadRequest $request)
-    {
-        $destinationPath = public_path() . '/uploads/files/';
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param FileUploadRequest $request
+	 * @return Response
+	 */
+	public function upload(FileUploadRequest $request)
+	{
+		$destinationPath = public_path() . '/uploads/files/';
 
-        $file_temp = $request->file('file');
-        $extension       = $file_temp->getClientOriginalExtension() ?: 'png';
-        $safeName        = str_random(10).'.'.$extension;
+		$file_temp = $request->file('file')[0];
+		$extension       = $file_temp->getClientOriginalExtension();
+		$safeName        = str_random(20).'.'.$extension;
 
-        $fileItem = new File();
-        $fileItem->filename = $safeName;
-        $fileItem->mime = $file_temp->getMimeType();
-        $fileItem->save();
+		$fileItem = new File();
+		$fileItem->filename = $safeName;
+		$fileItem->mime = $file_temp->getMimeType();
+		$fileItem->event_id = $request->get('event_id');
+		$fileItem->status = $request->get('status');
+		$fileItem->original_filename = $file_temp->getClientOriginalName();
+		$fileItem->save();
 
-        $file_temp->move($destinationPath, $safeName);
+		$file_temp->move($destinationPath, $safeName);
 
-        Thumbnail::generate_image_thumbnail($destinationPath . $safeName, $destinationPath . 'thumb_' . $safeName);
+		return $fileItem->toJson();
+	}
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param FileUploadRequest $request
+	 * @return Response
+	 */
+	public function store(FileUploadRequest $request)
+	{
+		$destinationPath = public_path() . '/uploads/files/';
 
-        return $fileItem->toJson();
-    }
+		$file_temp = $request->file('file');
+		$extension       = $file_temp->getClientOriginalExtension() ?: 'png';
+		$safeName        = str_random(10).'.'.$extension;
 
-    /**
+		$fileItem = new File();
+		$fileItem->filename = $safeName;
+		$fileItem->mime = $file_temp->getMimeType();
+		$fileItem->save();
+
+		$file_temp->move($destinationPath, $safeName);
+
+		Thumbnail::generate_image_thumbnail($destinationPath . $safeName, $destinationPath . 'thumb_' . $safeName);
+
+		return $fileItem->toJson();
+	}
+
+	/**
      * Store a newly created resource in storage.
      *
      * @param FileUploadRequest $request

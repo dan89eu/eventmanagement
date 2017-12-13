@@ -10,7 +10,8 @@ Route::post('events', ['as'=> 'events.store', 'uses' => 'EventController@store']
 	Route::get('events/create', ['as'=> 'events.create', 'uses' => 'EventController@create']);
 	Route::get('events/data', ['as'=> 'events.data', 'uses' => 'EventController@data']);
 	Route::post('events/data2', ['as'=> 'events.editdata', 'uses' => 'EventController@editData']);
-Route::put('events/{events}', ['as'=> 'events.update', 'uses' => 'EventController@update']);
+	Route::post('events/{events}', ['as'=> 'events.updateJson', 'uses' => 'EventController@updateJson']);
+	Route::put('events/{events}', ['as'=> 'events.update', 'uses' => 'EventController@update']);
 Route::patch('events/{events}', ['as'=> 'events.update', 'uses' => 'EventController@update']);
 Route::get('events/{id}/delete', array('as' => 'events.delete', 'uses' => 'EventController@getDelete'));
 Route::get('events/{id}/confirm-delete', array('as' => 'events.confirm-delete', 'uses' => 'EventController@getModalDelete'));
@@ -40,7 +41,8 @@ Route::group(array('prefix' => 'admin/', 'middleware' => 'admin','as'=>'admin.')
 Route::get('campaigns', ['as'=> 'campaigns.index', 'uses' => 'CampaignController@index']);
 Route::post('campaigns', ['as'=> 'campaigns.store', 'uses' => 'CampaignController@store']);
 Route::get('campaigns/create', ['as'=> 'campaigns.create', 'uses' => 'CampaignController@create']);
-Route::put('campaigns/{campaigns}', ['as'=> 'campaigns.update', 'uses' => 'CampaignController@update']);
+	Route::post('campaigns/{campaigns}', ['as'=> 'campaigns.updateJson', 'uses' => 'CampaignController@updateJson']);
+	Route::put('campaigns/{campaigns}', ['as'=> 'campaigns.update', 'uses' => 'CampaignController@update']);
 Route::patch('campaigns/{campaigns}', ['as'=> 'campaigns.update', 'uses' => 'CampaignController@update']);
 Route::get('campaigns/{id}/delete', array('as' => 'campaigns.delete', 'uses' => 'CampaignController@getDelete'));
 Route::get('campaigns/{id}/confirm-delete', array('as' => 'campaigns.confirm-delete', 'uses' => 'CampaignController@getModalDelete'));

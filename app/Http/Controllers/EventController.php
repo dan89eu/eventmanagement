@@ -76,14 +76,17 @@ class EventController extends InfyOmBaseController
 
 		$eventStatusArr = EventStatus::all(['id','value','name']);
 
+		$campaignStatusArr = [['key'=>1,'label'=>'Scheduled'],['key'=>2,'label'=>'sent'],['key'=>3,'label'=>'opened'],['key'=>4,'label'=>'clicked']];
+
 		foreach($eventsArr as $event){
 			$evt = clone($event);
 			$evt->event = $evt->id;
-			$evt->id = $evt->id+1000;
+			$evt->end_date = $evt->end_date;
+			$evt->id = $evt->id+1000000000;
 			$campaignArr[] = $evt;
 		}
 
-		return response()->json(['data'=>$campaignArr,'collections'=>['eventType'=>$categoryArr,'eventStatus'=>$eventStatusArr,'event'=>$eventsArr]]);
+		return response()->json(['data'=>$campaignArr,'collections'=>['eventType'=>$categoryArr,'eventStatus'=>$eventStatusArr,'event'=>$eventsArr, 'campaignStatus'=>$campaignStatusArr]]);
 	}
 
 	public function editData(Request $request)
@@ -190,29 +193,54 @@ class EventController extends InfyOmBaseController
         return view('admin.events.show')->with('event', $event);
     }
 
-    /**
-     * Show the form for editing the specified Event.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $event = $this->eventRepository->findWithoutFail($id);
+	/**
+	 * Show the form for editing the specified Event.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$event = $this->eventRepository->findWithoutFail($id);
 
-	    if($event->user_id != $this->getUserId()){
-		    unset($event);
-	    }
+		if($event->user_id != $this->getUserId()){
+			unset($event);
+		}
 
-        if (empty($event)) {
-            Flash::error('Event not found');
+		if (empty($event)) {
+			Flash::error('Event not found');
 
-            return redirect(route('events.index'));
-        }
+			return redirect(route('events.index'));
+		}
 
-        return view('admin.events.edit')->with('event', $event);
-    }
+		return view('admin.events.edit')->with('event', $event);
+	}
+
+	/**
+	 * Update the specified Event in storage.
+	 *
+	 * @param  int $id
+	 * @param UpdateEventRequest|Request $request
+	 * @return Response
+	 */
+	public function updateJson($id, Request $request)
+	{
+		$event = $this->eventRepository->findWithoutFail($id);
+
+		if($event->user_id != $this->getUserId()){
+			unset($event);
+		}
+
+		if (empty($event)) {
+
+			return $this->sendResponse(['error'=>'Empty array'], 'Empty array');
+		}
+
+		$event = $this->eventRepository->update($request->all(), $id);
+
+		return $this->sendResponse($event, 'Event saved');
+	}
 
     /**
      * Update the specified Event in storage.

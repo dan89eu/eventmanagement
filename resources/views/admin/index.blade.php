@@ -11,6 +11,10 @@ Calendar
 <link href="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/dhtmlxscheduler.css') }}" rel="stylesheet" />
 <link href="{{ mix('assets/css/dhtmlx/styles.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/vendors/daterangepicker/css/daterangepicker.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/vendors/modal/css/component.css') }}" rel="stylesheet"/>
+<link href="{{ asset('assets/css/pages/advmodals.css') }}" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+
 
 @stop
 
@@ -51,11 +55,37 @@ Calendar
 
 </section>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="exampleModalLabel">Upload files</h5>
+            </div>
+            <div class="modal-body">
+                <div class="file-loading">
+                    <input id="input-b9" name="file[]" multiple type="file">
+                </div>
+                <div id="kartik-file-errors"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-primary" title="Your custom upload logic">Save</button>-->
+            </div>
+        </div>
+    </div>
+</div>
 
 @stop
 
 {{-- page level scripts --}}
 @section('footer_scripts')
+    <script type="text/javascript" src="{{ asset('assets/vendors/modal/js/classie.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendors/underscore/js/underscore-min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendors/moment/js/moment.min.js')}}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/dhtmlxscheduler.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_limit.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_collision.js') }}"></script>
@@ -63,5 +93,7 @@ Calendar
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_editors.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_minical.js') }}"></script>
 <script language="javascript" type="text/javascript" src="{{ asset('assets/dhtmlx_lib/dhtmlxScheduler/ext/dhtmlxscheduler_tooltip.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/fileinput.min.js"></script>
 <script language="javascript" type="text/javascript" src="{{ mix('assets/js/dhtmlx/scripts.js') }}"></script>
 @stop

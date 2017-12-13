@@ -1,34 +1,36 @@
 (function () {
 	scheduler.locale.labels.section_text = 'Email Name';
 	scheduler.locale.labels.section_event = 'Event';
-	scheduler.locale.labels.section_status = 'Event Status';
+	scheduler.locale.labels.section_status = 'Email Status';
+	scheduler.locale.labels.section_evtStatus = 'Event Status';
 	scheduler.locale.labels.section_is_paid = 'Paid';
 	scheduler.locale.labels.section_time = 'Time';
 	scheduler.locale.labels.section_email = 'Email sent';
 	scheduler.xy.scale_height = 30;
+	scheduler.config.click_form_details = true;
 	scheduler.config.details_on_create = false;
 	scheduler.config.details_on_dblclick = false;
 	scheduler.config.dblclick_create = false;
 	scheduler.config.prevent_cache = true;
 	scheduler.config.show_loading = true;
 	scheduler.config.xml_date = "%Y-%m-%d";
-	scheduler.config.drag_resize= false;
+	scheduler.config.drag_resize = false;
+	scheduler.locale.labels["send_now_button"] = "Send now";
+	scheduler.locale.labels["upload_file_button"] = "Upload file";
+	scheduler.locale.labels["event_page_button"] = "Event page";
 
 
 	var eventsArr = scheduler.serverList("event");
 	var eventsTypesArr = scheduler.serverList("eventType");
 	var eventsStatusesArr = scheduler.serverList("eventStatus");
 
-	var evs = scheduler.getEvents();
-	for (var i=0; i<evs.length; i++){
-		console.log(evs[i]);
-	}
 
 	scheduler.config.lightbox.sections = [
 		{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
-		{map_to: "status", name: "status", type: "radio", options: scheduler.serverList("eventStatus")},
+		{map_to: "status", name: "status", type: "select", options: scheduler.serverList("campaignStatus")},
+		{map_to: "status", name: "evtStatus", type: "select", options: scheduler.serverList("eventStatus")},
 		{map_to: "text", name: "text", type: "textarea", height: 26},
-		{map_to: "sent", name: "email", type: "checkbox", checked_value:true, unchecked_value:false},
+		{map_to: "sent", name: "email", type: "checkbox", checked_value: true, unchecked_value: false},
 	];
 
 	scheduler.locale.labels.timeline_tab = 'Timeline';
@@ -53,13 +55,9 @@
 		}
 	});
 
-	console.log(scheduler.serverList("currentEvents"));
-	console.log(scheduler.getEvents());
-
 	function findInArray(array, key) {
 		for (var i = 0; i < array.length; i++) {
-			if (key == array[i].id){
-				console.log(array[i]);
+			if (key == array[i].id) {
 				return array[i];
 			}
 		}
@@ -67,8 +65,6 @@
 	}
 
 	function getRoomType(key) {
-
-		console.log(key,eventsTypesArr,findInArray(eventsTypesArr, key));
 
 		return findInArray(eventsTypesArr, key).name;
 	}
@@ -82,9 +78,7 @@
 	}
 
 	scheduler.templates.timeline_scale_label = function (key, label, section) {
-		console.log(key,label,section);
 		var roomStatus = getRoomStatus(section.status);
-		console.log(roomStatus);
 		return ["<div class='timeline_item_separator'></div>",
 			"<div class='timeline_item_cell'>" + label + "</div>",
 			"<div class='timeline_item_separator'></div>",
@@ -112,12 +106,10 @@
 
 	scheduler.date.timeline_start = scheduler.date.month_start;
 	scheduler.date.add_timeline = function (date, step) {
-		console.log(date,step);
 		return scheduler.date.add(date, step, "month");
 	};
 
 	scheduler.attachEvent("onBeforeViewChange", function (old_mode, old_date, mode, date) {
-		console.log(old_mode, old_date, mode, date);
 		var year = date.getFullYear();
 		var month = (date.getMonth() + 1);
 		var d = new Date(year, month, 0);
@@ -127,7 +119,11 @@
 	});
 
 	scheduler.templates.event_class = function (start, end, event) {
+		if (event.id > 1000000000)
+			return "room_status_indicator_" + (event.status || "");
+
 		return "event_" + (event.status || "");
+
 	};
 
 	function getBookingStatus(key) {
@@ -143,9 +139,9 @@
 	scheduler.templates.event_bar_text = function (start, end, event) {
 		var paidStatus = getPaidStatus(event.is_paid);
 		var startDate = eventDateFormat(event.start_date);
-		if(event.status==4){
+		if (event.status == 4) {
 			return "<div class='booking_status booking-option'>&#10003;&#10003;</div>";
-		}else if(event.status==3){
+		} else if (event.status == 3) {
 			return "<div class='booking_status booking-option'>&#10003;</div>";
 		}
 
@@ -155,8 +151,6 @@
 
 	scheduler.templates.tooltip_text = function (start, end, event) {
 		var room = getRoom(event.event) || {label: ""};
-
-		console.log(event);
 
 		var html = [];
 		html.push("Detail: <b>" + event.text + "</b>");
@@ -187,22 +181,15 @@
 		ev.status = 1;
 		ev.is_paid = false;
 		ev.text = 'new booking';
-		console.log(ev);
 	});
 
 	scheduler.addMarkedTimespan({days: [0, 6], zones: "fullday", css: "timeline_weekend"});
 
 	window.updateSections = function updateSections(value) {
 
-		console.log(value);
-		console.log(eventsArr.slice());
-
 		var currenteventsArr = [];
 		if (value == 'all') {
 			scheduler.updateCollection("currentEvents", eventsArr.slice());
-
-			console.log(scheduler.serverList("currentEvents"));
-			console.log(scheduler.getEvents());
 			return
 		}
 		for (var i = 0; i < eventsArr.length; i++) {
@@ -224,29 +211,84 @@
 		select.innerHTML = selectHTML.join("");
 	});
 
-	scheduler.attachEvent("onEventSave", function (id, ev, is_new) {
-		if (!ev.text) {
-			dhtmlx.alert("Text must not be empty");
-			return false;
+	scheduler.attachEvent("onBeforeLightbox", function (id) {
+
+		var task = scheduler.getEvent(id);
+		console.log(id, task);
+		scheduler.resetLightbox();
+		if (id > 1000000000) {
+
+			scheduler.config.buttons_right = ["upload_file_button","event_page_button"];
+			scheduler.config.lightbox.sections = [
+				{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
+				{map_to: "status", name: "evtStatus", type: "select", options: scheduler.serverList("eventStatus")},
+				{ name: "file", type: "file"},
+			];
+		} else {
+
+			scheduler.config.buttons_right = ["send_now_button"];
+			scheduler.config.lightbox.sections = [
+				{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
+				{map_to: "status", name: "status", type: "select", options: scheduler.serverList("campaignStatus")},
+				{map_to: "text", name: "text", type: "textarea", height: 26},
+				{map_to: "sent", name: "email", type: "checkbox", checked_value: true, unchecked_value: false},
+			];
 		}
+
+
+		console.log(scheduler.serverList("campaignStatus"));
 		return true;
 	});
 
 	scheduler.attachEvent("onLightbox", function(){
-		var section = scheduler.formSection("text");
-		section.control.disabled = true;
 		var section = scheduler.formSection("event");
 		section.control.disabled = true;
-		var section = scheduler.formSection("event");
-		section.control.disabled = true;
+		try{
+			var section = scheduler.formSection("text");
+			console.log(section);
+			console.log(section.control);
+			if(section.control){
+				section.control.disabled = true;
+			}
+		}catch (e)
+		{
+			console.error(e);
+		}
+	});
+
+	scheduler.attachEvent("onLightboxButton", function (button_id, node, e) {
+		console.log(e);
+		console.log(node);
+		console.log(scheduler.getState());
+		if (button_id == "send_now_button") {
+			console.log("send_now_button");
+		}
+		switch (button_id){
+			case "send_now_button":
+				break;
+			case "upload_file_button":
+				break;
+			case "event_page_button":
+				window.open ('events/'+(scheduler.getState().select_id-1000000000),'_blank')
+				break;
+		}
+		return true;
+	});
+
+	scheduler.attachEvent("onEventSave",function(id,ev,is_new){
+		console.log(id,ev,is_new)
+		return true;
+	})
+	scheduler.attachEvent("onEventChanged", function(id,ev){
+		console.log(id,ev)
+
 	});
 
 	/*scheduler.attachEvent("onYScaleDblClick", function(index,section,event){
 		console.log(index,section,event);
 	});*/
 
-	window.onload = function(){
-		console.log("body load");
+	window.onload = function () {
 		init();
 	};
 
@@ -255,8 +297,8 @@
 function init() {
 	scheduler.init('scheduler_here', new Date(), "timeline");
 	scheduler.load("events/data", "json");
-	window.dp = new dataProcessor("events/data2");
-	dp.init(scheduler);
+	//window.dp = new dataProcessor("events/data2");
+	//dp.init(scheduler);
 
 
 	(function () {

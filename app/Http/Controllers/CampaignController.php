@@ -107,32 +107,53 @@ class CampaignController extends InfyOmBaseController
         return view('admin.campaigns.edit')->with('campaign', $campaign);
     }
 
-    /**
-     * Update the specified Campaign in storage.
-     *
-     * @param  int              $id
-     * @param UpdateCampaignRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateCampaignRequest $request)
-    {
-        $campaign = $this->campaignRepository->findWithoutFail($id);
+	/**
+	 * Update the specified Campaign in storage.
+	 *
+	 * @param  int              $id
+	 * @param UpdateCampaignRequest $request
+	 *
+	 * @return Response
+	 */
+	public function update($id, UpdateCampaignRequest $request)
+	{
+		$campaign = $this->campaignRepository->findWithoutFail($id);
 
-        
 
-        if (empty($campaign)) {
-            Flash::error('Campaign not found');
 
-            return redirect(route('campaigns.index'));
-        }
+		if (empty($campaign)) {
+			Flash::error('Campaign not found');
 
-        $campaign = $this->campaignRepository->update($request->all(), $id);
+			return redirect(route('campaigns.index'));
+		}
 
-        Flash::success('Campaign updated successfully.');
+		$campaign = $this->campaignRepository->update($request->all(), $id);
 
-        return redirect(route('admin.campaigns.index'));
-    }
+		Flash::success('Campaign updated successfully.');
+
+		return redirect(route('admin.campaigns.index'));
+	}
+
+	/**
+	 * Update the specified Campaign in storage.
+	 *
+	 * @param  int $id
+	 * @param UpdateCampaignRequest|Request $request
+	 * @return Response
+	 */
+	public function updateJson($id, Request $request)
+	{
+		$campaign = $this->campaignRepository->findWithoutFail($id);
+
+
+		if (empty($campaign)) {
+			return $this->sendResponse(['error'=>'Campaign not found'], 'Campaign not found');
+		}
+
+		$campaign = $this->campaignRepository->update($request->all(), $id);
+
+		return $this->sendResponse($campaign, 'Campaign updated successfully.');
+	}
 
     /**
      * Remove the specified Campaign from storage.

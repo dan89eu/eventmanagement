@@ -67,6 +67,10 @@ class SendEmails extends Command
 	        $campaign->sent = 1;
 	        $campaign->status = 2;
 	        $campaign->save();
+	        if($campaign->events->status==1){
+		        $campaign->events->status=2;
+		        $campaign->events->save();
+	        }
         }
 
 	    activity('emails:send')
