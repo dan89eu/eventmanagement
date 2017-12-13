@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use\App\Http\controllers\JoshController;
 use App\File;
 use App\Helpers\Thumbnail;
+use App\Http\Controllers\JoshController;
 use App\Http\Requests;
 use App\Http\Requests\FileUploadRequest;
 use Illuminate\Http\Request;
