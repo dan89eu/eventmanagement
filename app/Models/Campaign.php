@@ -25,7 +25,8 @@ class Campaign extends Model
         'event_id',
 	    'status',
 	    'subject',
-	    'content'
+	    'content',
+	    'sent'
     ];
 
     /**

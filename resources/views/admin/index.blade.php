@@ -78,6 +78,25 @@ Calendar
         </div>
     </div>
 </div>
+<div class="modal fade modal-fade-in-scale-up" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true" data-campaignID=0 data-action="">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="confirmModalLabel">Confirm your action</h5>
+            </div>
+            <div class="modal-body">
+                <p>Please confirm your action: <strong id="confirmModalAction">Send email now</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn bg-warning" title="Save" id="confirmModalSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @stop
 

@@ -18,6 +18,7 @@
 	scheduler.locale.labels["send_now_button"] = "Send now";
 	scheduler.locale.labels["upload_file_button"] = "Upload file";
 	scheduler.locale.labels["event_page_button"] = "Event page";
+	scheduler.locale.labels["remove_from_queue"] = "Remove from queue";
 
 
 	var eventsArr = scheduler.serverList("event");
@@ -143,11 +144,11 @@
 		var paidStatus = getPaidStatus(event.is_paid);
 		var startDate = eventDateFormat(event.start_date);
 		if(event.id<1000000000)
-		if (event.status == 4) {
-			return "<div class='booking_status booking-option'>&#10003; &#10003;</div>";
-		} else if (event.status == 3) {
-			return "<div class='booking_status booking-option'>&#10003;</div>";
-		}
+			if (event.status == 4) {
+				return "<div class='booking_status booking-option'>&#10003; &#10003;</div>";
+			} else if (event.status == 3) {
+				return "<div class='booking_status booking-option'>&#10003;</div>";
+			}
 
 		return "";
 
@@ -224,12 +225,12 @@
 			];
 		} else {
 
-			scheduler.config.buttons_right = ["send_now_button"];
+
+			scheduler.config.buttons_left = ["dhx_cancel_btn"];
+			scheduler.config.buttons_right = ["remove_from_queue","send_now_button"];
 			scheduler.config.lightbox.sections = [
 				{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
 				{map_to: "status", name: "status", type: "select", options: scheduler.serverList("campaignStatus")},
-				{map_to: "text", name: "text", type: "textarea", height: 26},
-				{map_to: "sent", name: "email", type: "checkbox", checked_value: true, unchecked_value: false},
 			];
 		}
 
@@ -245,9 +246,7 @@
 		section.control.disabled = true;
 		if(id<1000000000){
 			try{
-				var section = scheduler.formSection("text");
-				console.log(section);
-				console.log(section.control);
+				var section = scheduler.formSection("status");
 				if(section.control){
 					section.control.disabled = true;
 				}
@@ -269,6 +268,10 @@
 		}
 		switch (button_id){
 			case "send_now_button":
+				$('#confirmModal #confirmModalAction').text('Send email now');
+				$('#confirmModal').data('campaignID',scheduler.getState().select_id);
+				$('#confirmModal').data('action',button_id);
+				$('#confirmModal').modal('show');
 				break;
 			case "upload_file_button":
 
@@ -288,8 +291,32 @@
 			case "event_page_button":
 				window.open ('events/'+(scheduler.getState().select_id-1000000000),'_blank')
 				break;
+			case "remove_from_queue":
+				$('#confirmModal').data('action',button_id);
+				$('#confirmModal').data('campaignID',scheduler.getState().select_id);
+				$('#confirmModal #confirmModalAction').text('Remove email from queue');
+				$('#confirmModal').modal('show');
+				break;
 		}
 		return true;
+	});
+
+	$('#confirmModalSave').click(function(){
+		console.log($('#confirmModal').data('campaignID'));
+		console.log($('#confirmModal').data('action'));
+		$('#confirmModal').modal('hide');
+		switch ($('#confirmModal').data('action')){
+			case 'remove_from_queue':
+				$.post( "/admin/campaigns/"+$('#confirmModal').data('campaignID'),{sent:1}, function( data ) {
+					console.log(data );
+				});
+				break;
+			case 'send_now_button':
+				$.post( "/admin/campaigns/"+$('#confirmModal').data('campaignID'),{date:moment().format('YYYY-MM-DD')}, function( data ) {
+					console.log(data );
+				});
+				break;
+		}
 	});
 
 	scheduler.attachEvent("onEventSave",function(id,ev,is_new){
