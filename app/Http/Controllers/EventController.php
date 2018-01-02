@@ -64,13 +64,14 @@ class EventController extends InfyOmBaseController
 	public function data()
 	{
 
-		if(Sentinel::inRole('admin')){
+		if(Sentinel::inRole('superadmin')){
 			$eventsArr = $this->eventRepository->all();
 			$campaignArr = $this->campaignRepository->all();
 			$categoryArr = $this->categoryRepository->all();
 		}
 		else{
-			$users = User::where('company_id',Sentinel::getUser()->company_id)->get([id]);
+			$users = User::where('company_id',Sentinel::getUser()->company_id)->pluck('id')->toArray();
+			//dd($users);
 			$eventsArr = $this->eventRepository->findWhereIn('user_id',$users);
 			$campaignArr = $this->campaignRepository->findWhereIn('user_id',$users);
 			$categoryArr = $this->categoryRepository->findWhereIn('user_id',$users);
