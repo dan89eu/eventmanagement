@@ -59,7 +59,9 @@
                                     <div id="rootwizard">
                                         <ul>
                                             <li><a href="#tab1" data-toggle="tab">User Profile</a></li>
+                                            @if (Sentinel::check() && Sentinel::inRole('superadmin'))
                                             <li><a href="#tab4" data-toggle="tab">User Group</a></li>
+                                            @endif
                                         </ul>
                                         <div class="tab-content">
                                             <div class="tab-pane" id="tab1">
@@ -136,7 +138,7 @@
                                                 <div class="form-group {{ $errors->first('company', 'has-error') }}" id="company_div" style="display: none">
                                                     <label for="group" class="col-sm-2 control-label">Company *</label>
                                                     <div class="col-sm-10">
-                                                        <select class="form-control " title="Select company..." name="company[]" id="company" required>
+                                                        <select class="form-control " title="Select company..." name="company_id" id="company_id" required>
                                                             <option value="">Select</option>
                                                             @foreach($companies as $company)
                                                                 <option value="{!! $company->id !!}" {{ (($company->id==$userCompany) ? ' selected="selected"' : '') }}>{{ $company->name }}</option>

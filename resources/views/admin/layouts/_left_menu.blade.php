@@ -602,6 +602,7 @@
             </li>--}}
         </ul>
     </li>
+    @if (Sentinel::check() && Sentinel::inRole('superadmin'))
     <li {!! (Request::is('admin/email-manager/index') ? 'class="active"' : '') !!}>
         <a href="{{  route('mailTracker_Index') }}" target="_blank">
             <i class="livicon" data-c="#F89A14" data-hc="#F89A14" data-name="mail" data-size="18"
@@ -609,7 +610,7 @@
             Mail Tracker
         </a>
     </li>
-    {{--@endif--}}
+    @endif
     {{--<li {!! (Request::is('admin/groups') || Request::is('admin/groups/create') || Request::is('admin/groups/*') ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="users" data-size="18" data-c="#418BCA" data-hc="#418BCA"

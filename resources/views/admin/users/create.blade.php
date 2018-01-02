@@ -111,6 +111,8 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="tab4" disabled="disabled">
+                                        @if (Sentinel::check() && Sentinel::inRole('superadmin'))
+
                                         <p class="text-danger"><strong>Be careful with group selection, if you give admin access.. they can access admin section</strong></p>
 
                                         <div class="form-group required">
@@ -141,6 +143,10 @@
                                             </div
                                                     {!! $errors->first('company', '<span class="help-block">:message</span>') !!}>
                                         </div>
+                                        @else
+                                            <input type="hidden" name="group" value="{{ Sentinel::findRoleBySlug('admin')->id }}" />
+                                            <input type="hidden" name="company_id" value="{{ Sentinel::getUser()->company_id }}" />
+                                        @endif
                                         <div class="form-group">
                                             <label for="activate" class="col-sm-2 control-label"> Activate User *</label>
                                             <div class="col-sm-10">
