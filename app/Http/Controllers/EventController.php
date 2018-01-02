@@ -13,6 +13,7 @@ use App\Repositories\CampaignRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\EventRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
+use App\User;
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Http\Request;
@@ -69,9 +70,10 @@ class EventController extends InfyOmBaseController
 			$categoryArr = $this->categoryRepository->all();
 		}
 		else{
-			$eventsArr = $this->eventRepository->findByField('user_id',$this->getUserId());
-			$campaignArr = $this->campaignRepository->findByField('user_id',$this->getUserId());
-			$categoryArr = $this->categoryRepository->findByField('user_id',$this->getUserId());
+			$users = User::where('company_id',Sentinel::getUser()->company_id)->get([id]);
+			$eventsArr = $this->eventRepository->findWhereIn('user_id',$users);
+			$campaignArr = $this->campaignRepository->findWhereIn('user_id',$users);
+			$categoryArr = $this->categoryRepository->findWhereIn('user_id',$users);
 		}
 
 		$eventStatusArr = EventStatus::all(['id','value','name']);
