@@ -94,10 +94,10 @@ class UsersController extends JoshController
             ->addColumn('actions',function($user) {
                 $actions = '<a href='. route('admin.users.show', $user->id) .'><i class="livicon" data-name="info" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="view user"></i></a>
                             <a href='. route('admin.users.edit', $user->id) .'><i class="livicon" data-name="edit" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="update user"></i></a>';
-                if ((Sentinel::getUser()->id != $user->id) && ($user->id != 1)) {
+                if ((Sentinel::getUser()->id != $user->id)) {
                     $actions .= '<a href='. route('admin.users.confirm-delete', $user->id) .' data-toggle="modal" data-target="#delete_confirm"><i class="livicon" data-name="user-remove" data-size="18" data-loop="true" data-c="#f56954" data-hc="#f56954" title="delete user"></i></a>';
                 }
-                if(Sentinel::getUser()->inRole('superadmin')){
+                if(Sentinel::getUser()->inRole('superadmin') && Sentinel::getUser()->id != $user->id){
                 	if(Activation::completed($user)){
 		                $actions .= '<a href='. route('admin.users.impersonate', $user->id) .'><i class="livicon" data-name="ghost" data-size="18" data-loop="true" data-c="#00bc8c" data-hc="#f89a14" title="impersonate user"></i></a>';
 	                }else{
