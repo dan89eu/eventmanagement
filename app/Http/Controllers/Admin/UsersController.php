@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\JoshController;
 use App\Http\Requests\UserRequest;
+use App\Models\Company;
 use App\User;
 use Cartalyst\Sentinel\Laravel\Facades\Activation;
 use File;
@@ -34,6 +35,37 @@ class UsersController extends JoshController
         return view('admin.users.index', compact('users'));
     }
 
+
+	public function impersonate($id)
+	{
+		try {
+			// Get the user information
+			$user = Sentinel::findUserById($id);
+
+			Sentinel::getUser()->impersonate($user);
+
+		} catch (UserNotFoundException $e) {
+
+		}
+
+		return Redirect::route('admin.dashboard');
+
+	}
+
+	public function leave()
+	{
+		try {
+
+			Sentinel::getUser()->leaveImpersonation();;
+
+		} catch (UserNotFoundException $e) {
+			// Prepare the error message
+		}
+
+		return Redirect::route('admin.dashboard');
+
+	}
+
     /*
      * Pass data through ajax call
      */
@@ -42,12 +74,15 @@ class UsersController extends JoshController
      */
     public function data()
     {
-        $users = User::get(['id', 'first_name', 'last_name', 'email','created_at']);
+        $users = User::get(['id', 'first_name', 'last_name', 'email','created_at','company_id']);
 
         return DataTables::of($users)
             ->editColumn('created_at',function(User $user) {
                 return $user->created_at->diffForHumans();
             })
+	        ->addColumn('company',function(User $user){
+	        	return $user->company?$user->company->name:'Admin';
+	        })
             ->addColumn('status',function($user){
 
                 if($activation = Activation::completed($user)){
@@ -61,6 +96,13 @@ class UsersController extends JoshController
                             <a href='. route('admin.users.edit', $user->id) .'><i class="livicon" data-name="edit" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="update user"></i></a>';
                 if ((Sentinel::getUser()->id != $user->id) && ($user->id != 1)) {
                     $actions .= '<a href='. route('admin.users.confirm-delete', $user->id) .' data-toggle="modal" data-target="#delete_confirm"><i class="livicon" data-name="user-remove" data-size="18" data-loop="true" data-c="#f56954" data-hc="#f56954" title="delete user"></i></a>';
+                }
+                if(Sentinel::getUser()->inRole('superadmin')){
+                	if(Activation::completed($user)){
+		                $actions .= '<a href='. route('admin.users.impersonate', $user->id) .'><i class="livicon" data-name="ghost" data-size="18" data-loop="true" data-c="#00bc8c" data-hc="#f89a14" title="impersonate user"></i></a>';
+	                }else{
+		                $actions .= '<a href='. route('admin.restore.user', $user->id) .'><i class="livicon" data-name="mail-alt" data-size="18" data-loop="true" data-c="#418bca" data-hc="#00bc8c" title="restore user"></i></a>';
+	                }
                 }
                 return $actions;
             })
@@ -76,11 +118,12 @@ class UsersController extends JoshController
     public function create()
     {
         // Get all the available groups
-        $groups = Sentinel::getRoleRepository()->all();
+	    $groups = Sentinel::getRoleRepository()->all();
+	    $companies = Company::all();
 
         $countries = $this->countries;
         // Show the page
-        return view('admin.users.create', compact('groups', 'countries'));
+        return view('admin.users.create', compact('groups','companies', 'countries'));
     }
 
     /**
@@ -150,17 +193,20 @@ class UsersController extends JoshController
     public function edit(User $user)
     {
 
-        // Get this user groups
-        $userRoles = $user->getRoles()->pluck('name', 'id')->all();
+	    // Get this user groups
+	    $userRoles = $user->getRoles()->pluck('name', 'id')->all();
+	    $userCompany = $user->company_id;
         // Get a list of all the available groups
         $roles = Sentinel::getRoleRepository()->all();
+
+	    $companies = Company::all();
 
         $status = Activation::completed($user);
 
         $countries = $this->countries;
 
         // Show the page
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'countries', 'status'));
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'countries', 'status','companies','userCompany'));
     }
 
     /**

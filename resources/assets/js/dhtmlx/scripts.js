@@ -23,6 +23,9 @@
 	var eventsArr = scheduler.serverList("event");
 	var eventsTypesArr = scheduler.serverList("eventType");
 	var eventsStatusesArr = scheduler.serverList("eventStatus");
+	var currentEventsArr = scheduler.serverList("currentEvents");
+
+	var oldEvent = {};
 
 
 	scheduler.config.lightbox.sections = [
@@ -42,7 +45,7 @@
 		render: 'bar',
 		x_unit: "day",
 		x_date: "%d",
-		x_size: 90,
+		x_size: 61,
 		dy: 30,
 		dx: 250,
 		event_dy: "full",
@@ -139,8 +142,9 @@
 	scheduler.templates.event_bar_text = function (start, end, event) {
 		var paidStatus = getPaidStatus(event.is_paid);
 		var startDate = eventDateFormat(event.start_date);
+		if(event.id<1000000000)
 		if (event.status == 4) {
-			return "<div class='booking_status booking-option'>&#10003;&#10003;</div>";
+			return "<div class='booking_status booking-option'>&#10003; &#10003;</div>";
 		} else if (event.status == 3) {
 			return "<div class='booking_status booking-option'>&#10003;</div>";
 		}
@@ -153,10 +157,16 @@
 		var room = getRoom(event.event) || {label: ""};
 
 		var html = [];
-		html.push("Detail: <b>" + event.text + "</b>");
-		html.push("Event: <b>" + room.label + "</b>");
-		html.push("Date: <b>" + eventDateFormat(start) + "</b>");
-		html.push(room.sent);
+		if (event.id < 1000000000) {
+			html.push("Detail: <b>" + event.text + "</b>");
+			html.push("Event: <b>" + room.label + "</b>");
+			html.push("Date: <b>" + eventDateFormat(start) + "</b>");
+			html.push(room.sent);
+		}else{
+			html.push("Event: <b>" + room.label + "</b>");
+			html.push("Begin Date: <b>" + eventDateFormat(start) + "</b>");
+			html.push("End Date: <b>" + eventDateFormat(end) + "</b>");
+		}
 		return html.join("<br>")
 	};
 
@@ -164,17 +174,6 @@
 		var formatFunc = scheduler.date.date_to_str('%d.%m.%Y');
 		return formatFunc(start) + " - " + formatFunc(end);
 	};
-
-	scheduler.attachEvent("onEventCollision", function (ev, evs) {
-		for (var i = 0; i < evs.length; i++) {
-			if (ev.room != evs[i].room) continue;
-			dhtmlx.message({
-				type: "error",
-				text: "This room is already booked for this date."
-			});
-		}
-		return true;
-	});
 
 	scheduler.attachEvent('onEventCreated', function (event_id) {
 		var ev = scheduler.getEvent(event_id);
@@ -221,8 +220,7 @@
 			scheduler.config.buttons_right = ["upload_file_button","event_page_button"];
 			scheduler.config.lightbox.sections = [
 				{map_to: "event", name: "event", type: "select", options: scheduler.serverList("currentEvents")},
-				{map_to: "status", name: "evtStatus", type: "select", options: scheduler.serverList("eventStatus")},
-				{ name: "file", type: "file"},
+				{map_to: "status", name: "evtStatus", type: "select", options: scheduler.serverList("eventStatus")}
 			];
 		} else {
 
@@ -240,26 +238,32 @@
 		return true;
 	});
 
-	scheduler.attachEvent("onLightbox", function(){
+
+	scheduler.attachEvent("onLightbox", function(id){
+		oldEvent=jQuery.extend(true,{},scheduler.getEvent(id)); //use it to get the object of the dragged event
 		var section = scheduler.formSection("event");
 		section.control.disabled = true;
-		try{
-			var section = scheduler.formSection("text");
-			console.log(section);
-			console.log(section.control);
-			if(section.control){
-				section.control.disabled = true;
+		if(id<1000000000){
+			try{
+				var section = scheduler.formSection("text");
+				console.log(section);
+				console.log(section.control);
+				if(section.control){
+					section.control.disabled = true;
+				}
+			}catch (e)
+			{
+				console.error(e);
 			}
-		}catch (e)
-		{
-			console.error(e);
 		}
+
 	});
 
 	scheduler.attachEvent("onLightboxButton", function (button_id, node, e) {
 		console.log(e);
 		console.log(node);
 		console.log(scheduler.getState());
+
 		if (button_id == "send_now_button") {
 			console.log("send_now_button");
 		}
@@ -267,6 +271,19 @@
 			case "send_now_button":
 				break;
 			case "upload_file_button":
+
+				$('#input-id').fileinput('clear');
+
+				$("#input-b9").fileinput({
+					showPreview: true,
+					showUpload: true,
+					elErrorContainer: '#kartik-file-errors',
+					uploadUrl: '/admin/file/upload',
+					uploadExtraData:{event_id:(scheduler.getState().select_id-1000000000),status:scheduler.formSection('evtStatus').getValue()}
+				});
+
+				$('#exampleModal').modal('show');
+
 				break;
 			case "event_page_button":
 				window.open ('events/'+(scheduler.getState().select_id-1000000000),'_blank')
@@ -281,12 +298,41 @@
 	})
 	scheduler.attachEvent("onEventChanged", function(id,ev){
 		console.log(id,ev)
+		console.log(oldEvent);
+
+		var diffObj = _.omit(ev, function(v,k) { return String(oldEvent[k]) == String(v); });
+
+		console.log(diffObj);
+
+		if(id>1000000000){
+			//TODO: event update
+			$.post( "/admin/events/"+(id-1000000000),diffObj, function( data ) {
+				console.log(data );
+				scheduler.setCurrentView();
+			});
+		}else{
+			//TODO: campaign update
+			if(diffObj['start_date']){
+				diffObj['date'] = moment(diffObj['start_date']).format('YYYY-MM-DD');
+				delete diffObj['start_date'];
+				delete diffObj['end_date'];
+			}
+			$.post( "/admin/campaigns/"+id,diffObj, function( data ) {
+				console.log(data );
+			});
+		}
 
 	});
 
-	/*scheduler.attachEvent("onYScaleDblClick", function(index,section,event){
+	scheduler.attachEvent("onBeforeDrag", function (id, mode, e){
+		oldEvent=jQuery.extend(true,{},scheduler.getEvent(id)); //use it to get the object of the dragged event
+		return true;
+	});
+
+	scheduler.attachEvent("onYScaleDblClick", function(index,section,event){
 		console.log(index,section,event);
-	});*/
+		scheduler.showLightbox(section.id+1000000000);
+	});
 
 	window.onload = function () {
 		init();
@@ -321,5 +367,8 @@ function init() {
 			"<div class='timeline_item_cell room_status'>Status</div>";
 		header.innerHTML = descriptionHTML;
 		element.appendChild(header);
+
+
+
 	})();
 }

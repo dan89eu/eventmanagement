@@ -48,6 +48,7 @@ Users List
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>User E-mail</th>
+                            <th>Company</th>
                             <th>Status</th>
                             <th>Created At</th>
                             <th>Actions</th>
@@ -80,7 +81,8 @@ Users List
                 { data: 'id', name: 'id' },
                 { data: 'first_name', name: 'first_name' },
                 { data: 'last_name', name: 'last_name' },
-                { data: 'email', name: 'email' },
+	            { data: 'email', name: 'email' },
+	            { data: 'company', name: 'company' },
                 { data: 'status', name: 'status'},
                 { data: 'created_at', name:'created_at'},
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }

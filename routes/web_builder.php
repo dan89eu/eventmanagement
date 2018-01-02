@@ -125,3 +125,18 @@ Route::get('emails/{emails}', ['as'=> 'emails.show', 'uses' => 'EmailController@
 Route::get('emails/{emails}/edit', ['as'=> 'emails.edit', 'uses' => 'EmailController@edit']);
 
 });
+
+
+Route::group(array('prefix' => 'admin/', 'middleware' => 'admin','as'=>'admin.'), function () {
+
+Route::get('companies', ['as'=> 'companies.index', 'uses' => 'CompanyController@index']);
+Route::post('companies', ['as'=> 'companies.store', 'uses' => 'CompanyController@store']);
+Route::get('companies/create', ['as'=> 'companies.create', 'uses' => 'CompanyController@create']);
+Route::put('companies/{companies}', ['as'=> 'companies.update', 'uses' => 'CompanyController@update']);
+Route::patch('companies/{companies}', ['as'=> 'companies.update', 'uses' => 'CompanyController@update']);
+Route::get('companies/{id}/delete', array('as' => 'companies.delete', 'uses' => 'CompanyController@getDelete'));
+Route::get('companies/{id}/confirm-delete', array('as' => 'companies.confirm-delete', 'uses' => 'CompanyController@getModalDelete'));
+Route::get('companies/{companies}', ['as'=> 'companies.show', 'uses' => 'CompanyController@show']);
+Route::get('companies/{companies}/edit', ['as'=> 'companies.edit', 'uses' => 'CompanyController@edit']);
+
+});

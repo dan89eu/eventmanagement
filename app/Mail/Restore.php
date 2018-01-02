@@ -33,7 +33,7 @@ class Restore extends Mailable
     public function build()
     {
 //        return $this->view('emails.register-activate');
-        return $this->from('example@example.com')
+        return $this->from('dan@driveprofit.com')
             ->markdown('emails.register-activate');
 
     }

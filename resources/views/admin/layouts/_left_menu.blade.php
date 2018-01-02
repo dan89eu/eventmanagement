@@ -1,4 +1,11 @@
 <ul id="menu" class="page-sidebar-menu">
+    @impersonating
+    <li>
+        <a href="{{ route('admin.users.impersonate.leave') }}"> <i class="livicon" data-name="sign-out" data-loop="true" data-color="#42aaca" data-hovercolor="#42aaca" data-size="28"></i>
+            <span style="position: relative; top: 3px;">Leave impersonation</span>
+        </a>
+    </li>
+    @endImpersonating
     <li {!! (Request::is('admin') ? 'class="active"' : '') !!}>
         <a href="{{ route('admin.dashboard') }}">
             <i class="livicon" data-name="home" data-size="18" data-c="#418BCA" data-hc="#418BCA"
@@ -560,7 +567,7 @@
             </li>
         </ul>
     </li>--}}
-    @if (Sentinel::check() && Sentinel::inRole('admin'))
+    {{--@if (Sentinel::check() && Sentinel::inRole('admin'))--}}
     <li {!! (Request::is('admin/users') || Request::is('admin/users/create') || Request::is('admin/user_profile') || Request::is('admin/users/*') || Request::is('admin/deleted_users') ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="user" data-size="18" data-c="#6CC66C" data-hc="#6CC66C"
@@ -581,7 +588,7 @@
                     Add New User
                 </a>
             </li>
-            <li {!! ((Request::is('admin/users/*')) && !(Request::is('admin/users/create')) ? 'class="active" id="active"' : '') !!}>
+            {{--<li {!! ((Request::is('admin/users/*')) && !(Request::is('admin/users/create')) ? 'class="active" id="active"' : '') !!}>
                 <a href="{{ URL::route('admin.users.show',Sentinel::getUser()->id) }}">
                     <i class="fa fa-angle-double-right"></i>
                     View Profile
@@ -592,7 +599,7 @@
                     <i class="fa fa-angle-double-right"></i>
                     Deleted Users
                 </a>
-            </li>
+            </li>--}}
         </ul>
     </li>
     <li {!! (Request::is('admin/email-manager/index') ? 'class="active"' : '') !!}>
@@ -602,7 +609,7 @@
             Mail Tracker
         </a>
     </li>
-    @endif
+    {{--@endif--}}
     {{--<li {!! (Request::is('admin/groups') || Request::is('admin/groups/create') || Request::is('admin/groups/*') ? 'class="active"' : '') !!}>
         <a href="#">
             <i class="livicon" data-name="users" data-size="18" data-c="#418BCA" data-hc="#418BCA"

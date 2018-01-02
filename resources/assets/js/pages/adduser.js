@@ -90,13 +90,13 @@ $("#commentForm").bootstrapValidator({
                 }
             }
         },
-        activate: {
+        /*activate: {
             validators: {
                 notEmpty: {
                     message: 'Please check the checkbox to activate'
                 }
             }
-        },
+        },*/
         group: {
             validators:{
                 notEmpty:{
@@ -138,12 +138,20 @@ $('#rootwizard .finish').click(function () {
     }
 
 });
-$('#activate').on('ifChanged', function(event){
+/*$('#activate').on('ifChanged', function(event){
     $('#commentForm').bootstrapValidator('revalidateField', $('#activate'));
-});
+});*/
 $('#commentForm').keypress(
     function(event){
         if (event.which == '13') {
             event.preventDefault();
         }
     });
+$('#group').change(function(){
+    console.log($('#group').val());
+    if($('#group').val()==1){
+	    $('#company_div').show();
+    }else{
+	    $('#company_div').hide();
+    }
+})

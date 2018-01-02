@@ -8,6 +8,10 @@
         {
             "type": "path",
             "url": "./infyomlabs/laravel-generator"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/dan89eu/laravel-impersonate"
         }
     ],
     "require": {
@@ -31,7 +35,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
         "spatie/laravel-activitylog": "^2.1",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "lab404/laravel-impersonate": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^2.4",

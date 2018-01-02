@@ -54,7 +54,7 @@
 
 .dhx_cal_event_line {
 	background-color: #BDBDBD !important;
-	padding-left: 4px;
+	padding-left: 8px;
 }
 
 .event_1 {
@@ -113,6 +113,9 @@
 
 .booking_status {
 	bottom: 2px;
+	word-wrap: break-word;
+	right: 0px;
+	font-size: 10px;
 }
 
 .booking_paid {

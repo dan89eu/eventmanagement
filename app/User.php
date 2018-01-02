@@ -1,7 +1,9 @@
 <?php namespace App;
+use App\Models\Company;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentTaggable\Taggable;
+use Lab404\Impersonate\Models\Impersonate;
 
 
 class User extends EloquentUser {
@@ -12,7 +14,14 @@ class User extends EloquentUser {
 	 * @var string
 	 */
 
+
+	use Impersonate;
+
 	protected $table = 'users';
+
+	protected $attributes = [
+		'company_id' => 0
+	];
 
 	/**
 	 * The attributes to be fillable from the model.
@@ -44,4 +53,12 @@ class User extends EloquentUser {
     {
         return str_limit($this->first_name . ' ' . $this->last_name, 30);
     }
+
+	public function companyCreated(){
+		return $this->hasOne(Company::class);
+	}
+
+	public function company(){
+		return $this->belongsTo(Company::class);
+	}
 }
