@@ -9,6 +9,12 @@ Event
     <link href="{{ asset('assets/vendors/datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/vendors/select2/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendors/select2/css/select2-bootstrap.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/vendors/sweetalert/css/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        .button-alignment{
+            margin-top:5px;
+        }
+    </style>
 @stop
 @section('content')
 <section class="content-header">
@@ -49,8 +55,35 @@ Event
     <script src="{{ asset('assets/vendors/moment/js/moment.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/vendors/daterangepicker/js/daterangepicker.js') }}" type="text/javascript"></script>
     <script language="javascript" type="text/javascript" src="{{ asset('assets/vendors/select2/js/select2.js') }}"></script>
+    <script src="{{ asset('assets/vendors/sweetalert/js/sweetalert.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/vendors/sweetalert/js/sweetalert-dev.js') }}" type="text/javascript"></script>
     <!-- end of page level js -->
     <script type="text/javascript">
+	    function sendEmail(event, email){
+		    console.log(event, email)
+		    swal({
+			    title: "Are you sure?",
+			    text: "Send email with subject "+email.subject+" to your contacts.",
+			    type: "info",
+			    showCancelButton: true,
+			    confirmButtonText: "Yes, send it!",
+			    cancelButtonText: "No, cancel!",
+			    closeOnConfirm: false,
+			    closeOnCancel: false
+		    }, function (isConfirm) {
+			    if (isConfirm) {
+
+			    	$.get("{!! route('admin.events.email') !!}",{event:event.id, email:email.id}, function (data) {
+			    		console.log(data);
+					    swal("Sent!", "Your email has been sent.", "success");
+				    });
+
+				    //swal("Sent!", "Your email has been sent.", "success");
+			    } else {
+				    swal("Cancelled", "You canceled email.", "error");
+			    }
+		    });
+	    }
 	    $(document).ready(function() {
 		    $(".select2").select2({
 			    theme:"bootstrap",
@@ -58,5 +91,6 @@ Event
 		    });
 
 	    });
+
     </script>
 @stop

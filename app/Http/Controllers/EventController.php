@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\EventStatus;
 use App\Repositories\CampaignRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\EmailRepository;
 use App\Repositories\EventRepository;
 use App\Http\Controllers\AppBaseController as InfyOmBaseController;
 use App\User;
@@ -32,12 +33,14 @@ class EventController extends InfyOmBaseController
 	private $eventRepository;
 	private $campaignRepository;
 	private $categoryRepository;
+	private $emailRepository;
 
-    public function __construct(EventRepository $eventRepo, CampaignRepository $campaignRepo, CategoryRepository $categoryRepo)
+    public function __construct(EventRepository $eventRepo, CampaignRepository $campaignRepo, CategoryRepository $categoryRepo, EmailRepository $emailRepo)
     {
 	    $this->eventRepository = $eventRepo;
 	    $this->campaignRepository = $campaignRepo;
 	    $this->categoryRepository = $categoryRepo;
+	    $this->emailRepository = $emailRepo;
     }
 
     /**
@@ -50,11 +53,12 @@ class EventController extends InfyOmBaseController
     {
 
         $this->eventRepository->pushCriteria(new RequestCriteria($request));
-	    if(Sentinel::inRole('admin')){
+	    if(Sentinel::inRole('superadmin')){
 		    $events = $this->eventRepository->all();
 	    }
 	    else{
-		    $events = $this->eventRepository->findByField('user_id',$this->getUserId());
+		    $users = User::where('company_id',Sentinel::getUser()->company_id)->pluck('id')->toArray();
+		    $events = $this->eventRepository->findWhereIn('user_id',$users);
 	    }
 
         return view('admin.events.index')
@@ -220,6 +224,40 @@ class EventController extends InfyOmBaseController
 		}
 
 		return view('admin.events.edit')->with('event', $event);
+	}
+
+	/**
+	 * Show the form for editing the specified Event.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function email(Request $request)
+	{
+		//dd($request->all());
+		$event = $this->eventRepository->findWithoutFail($request->get('event'));
+		$email = $this->emailRepository->findWithoutFail($request->get('email'));
+
+		if($event->user->company_id != Sentinel::getUser()->company_id){
+			unset($event);
+		}
+
+		if (empty($event)) {
+
+			return $this->sendResponse(['error'=>'Empty array'], 'Empty array');
+		}
+
+		$contacts = $event->contacts;
+
+		foreach ($contacts as $contact){
+			$campaign = new Campaign();
+			$campaign->content = $email->content;
+			$campaign->subject = $email->subject;
+			Mail::to($contact->email)->send(new EventDate($campaign));
+		}
+
+		return $this->sendResponse($event, 'Event saved');
 	}
 
 	/**

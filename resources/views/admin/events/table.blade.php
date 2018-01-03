@@ -30,32 +30,3 @@
     @endforeach
     </tbody>
 </table>
-@section('footer_scripts')
-
-    <div class="modal fade" id="delete_confirm" tabindex="-1" role="dialog" aria-labelledby="user_delete_confirm_title" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div>
-        </div>
-    </div>
-    <script>$(function () {$('body').on('hidden.bs.modal', '.modal', function () {$(this).removeData('bs.modal');});});</script>
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/datatables/css/buttons.bootstrap.css') }}"/>
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/datatables/css/dataTables.bootstrap.css') }}"/>
- <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/datatables/css/buttons.bootstrap.css') }}">
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" ></script>
- <script type="text/javascript" src="{{ asset('assets/vendors/datatables/js/dataTables.bootstrap.js') }}" ></script>
-
-    <script>
-        $('#events-table').DataTable({
-                      responsive: true,
-                      pageLength: 10
-                  });
-                  $('#events-table').on( 'length.dt', function ( e, settings, len ) {
-                     setTimeout(function(){
-                           $('.livicon').updateLivicon();
-                     },500);
-                  } );
-
-       </script>
-
-@stop

@@ -52,7 +52,7 @@
     {!! Form::label('contacts', 'Contacts:', array('class'=>'col-md-3')) !!}
     <div class="col-md-9">{!! Form::select('contacts[]', App\Models\Contact::pluck('first_name','id'), $contacts, ['class' => 'form-control select2','multiple', 'disabled']) !!}</div>
 </div>
-
+{{$event->categorys->manualemails()->get()}}
 <!-- Emails Field -->
 <div class="form-group">
     {!! Form::label('emails', 'Emails:', array('class'=>'col-md-3')) !!}
@@ -88,10 +88,10 @@
                     <td>Manual</td>
                     <td></td>
                     <td>
-                        <a href="{{ route('admin.emails.edit', $campaign->id) }}">
+                        <a href="{{ route('admin.events.edit', $campaign->id) }}">
                             <i class="livicon" data-name="edit" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="edit email"></i>
                         </a>
-                        <a href="{{ route('admin.emails.edit', $campaign->id) }}">
+                        <a href="javascript:;" class="send-email" onclick="sendEmail({{$event}},{{$campaign}})">
                             <i class="livicon" data-name="mail-alt" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="send email"></i>
                         </a>
                     </td>
@@ -106,7 +106,7 @@
 <div class="form-group">
     {!! Form::label('files', 'Files:', array('class'=>'col-md-3')) !!}
     <div class="col-md-9">
-        <table class="table table-responsive table-striped table-hover" id="events-table" width="100%">
+        <table class="table table-responsive table-striped table-hover" id="files-table" width="100%">
             <thead>
             <tr>
                 <th>Name</th>

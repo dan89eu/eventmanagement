@@ -7,7 +7,10 @@ Route::group(array('prefix' => 'admin/', 'middleware' => 'admin','as'=>'admin.')
 
 Route::get('events', ['as'=> 'events.index', 'uses' => 'EventController@index']);
 Route::post('events', ['as'=> 'events.store', 'uses' => 'EventController@store']);
+
+	Route::get('events/email', ['as'=> 'events.email', 'uses' => 'EventController@email']);
 	Route::get('events/create', ['as'=> 'events.create', 'uses' => 'EventController@create']);
+	Route::get('events/import', ['as'=> 'events.import', 'uses' => 'EventController@create']);
 	Route::get('events/data', ['as'=> 'events.data', 'uses' => 'EventController@data']);
 	Route::post('events/data2', ['as'=> 'events.editdata', 'uses' => 'EventController@editData']);
 	Route::post('events/{events}', ['as'=> 'events.updateJson', 'uses' => 'EventController@updateJson']);
@@ -16,7 +19,7 @@ Route::patch('events/{events}', ['as'=> 'events.update', 'uses' => 'EventControl
 Route::get('events/{id}/delete', array('as' => 'events.delete', 'uses' => 'EventController@getDelete'));
 Route::get('events/{id}/confirm-delete', array('as' => 'events.confirm-delete', 'uses' => 'EventController@getModalDelete'));
 Route::get('events/{events}', ['as'=> 'events.show', 'uses' => 'EventController@show']);
-Route::get('events/{events}/edit', ['as'=> 'events.edit', 'uses' => 'EventController@edit']);
+	Route::get('events/{events}/edit', ['as'=> 'events.edit', 'uses' => 'EventController@edit']);
 
 });
 
