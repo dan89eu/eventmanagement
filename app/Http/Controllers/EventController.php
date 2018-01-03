@@ -183,7 +183,7 @@ class EventController extends InfyOmBaseController
     {
         $event = $this->eventRepository->findWithoutFail($id);
 
-        if($event->user_id != $this->getUserId()){
+        if($event->user->company_id != Sentinel::getUser()->company_id){
         	unset($event);
         }
 
@@ -193,7 +193,9 @@ class EventController extends InfyOmBaseController
             return redirect(route('admin.events.index'));
         }
 
-        return view('admin.events.show')->with('event', $event);
+        $contacts = $event->contacts;
+
+        return view('admin.events.show')->with('event', $event)->with('contacts', $contacts);
     }
 
 	/**
@@ -207,7 +209,7 @@ class EventController extends InfyOmBaseController
 	{
 		$event = $this->eventRepository->findWithoutFail($id);
 
-		if($event->user_id != $this->getUserId()){
+		if($event->user->company_id != Sentinel::getUser()->company_id){
 			unset($event);
 		}
 
@@ -231,7 +233,7 @@ class EventController extends InfyOmBaseController
 	{
 		$event = $this->eventRepository->findWithoutFail($id);
 
-		if($event->user_id != $this->getUserId()){
+		if($event->user->company_id != Sentinel::getUser()->company_id){
 			unset($event);
 		}
 
@@ -257,7 +259,7 @@ class EventController extends InfyOmBaseController
     {
         $event = $this->eventRepository->findWithoutFail($id);
 
-	    if($event->user_id != $this->getUserId()){
+	    if($event->user->company_id != Sentinel::getUser()->company_id){
 		    unset($event);
 	    }
 

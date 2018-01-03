@@ -86,7 +86,7 @@ class CategoryController extends InfyOmBaseController
     {
         $category = $this->categoryRepository->findWithoutFail($id);
 
-	    if($category->user_id != $this->getUserId()){
+	    if($category->user->company_id != Sentinel::getUser()->company_id){
 		    unset($category);
 	    }
 
@@ -110,7 +110,7 @@ class CategoryController extends InfyOmBaseController
     {
         $category = $this->categoryRepository->findWithoutFail($id);
 
-	    if($category->user_id != $this->getUserId()){
+	    if($category->user->company_id != Sentinel::getUser()->company_id){
 		    unset($category);
 	    }
 
@@ -135,7 +135,7 @@ class CategoryController extends InfyOmBaseController
     {
         $category = $this->categoryRepository->findWithoutFail($id);
 
-	    if($category->user_id != $this->getUserId()){
+	    if($category->user->company_id != Sentinel::getUser()->company_id){
 		    unset($category);
 	    }
         

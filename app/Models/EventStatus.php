@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\File;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -58,5 +59,15 @@ class EventStatus extends Model
 	public function getLabelAttribute()
 	{
 		return $this->name;
+	}
+
+	public function events()
+	{
+		return $this->hasMany(Event::class);
+	}
+
+	public function files()
+	{
+		return $this->hasMany(File::class);
 	}
 }

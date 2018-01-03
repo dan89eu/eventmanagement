@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\File;
+use App\User;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -82,6 +84,11 @@ class Event extends Model
 		return $this->belongsTo(Category::class);
 	}
 
+	public function categorys()
+	{
+		return $this->belongsTo(Category::class,'category_id');
+	}
+
 
 	public function getTypeAttribute()
 	{
@@ -96,6 +103,19 @@ class Event extends Model
 	public function getValueAttribute()
 	{
 		return $this->id;
+	}
+
+	public function user(){
+		return $this->belongsTo(User::class);
+	}
+
+	public function statusDescription(){
+		return $this->belongsTo(EventStatus::class,'status');
+	}
+
+	public function files()
+	{
+		return $this->hasMany(File::class);
 	}
 
 

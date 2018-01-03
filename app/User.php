@@ -1,5 +1,7 @@
 <?php namespace App;
+use App\Models\Category;
 use App\Models\Company;
+use App\Models\Event;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentTaggable\Taggable;
@@ -58,7 +60,15 @@ class User extends EloquentUser {
 		return $this->hasOne(Company::class);
 	}
 
+	public function events(){
+		return $this->hasMany(Event::class);
+	}
+
 	public function company(){
 		return $this->belongsTo(Company::class);
+	}
+
+	public function category(){
+		return $this->hasMany(Category::class);
 	}
 }

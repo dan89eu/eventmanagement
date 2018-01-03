@@ -14,7 +14,7 @@
             <td>{!! $event->name !!}</td>
             <td>{!! $event->start_date !!}</td>
             <td>{!! $event->end_date !!}</td>
-            <td>{!! $event->status !!}</td>
+            <td>{!! $event->statusDescription->name !!}</td>
             <td>
                  <a href="{{ route('admin.events.show', $event->id) }}">
                      <i class="livicon" data-name="info" data-size="18" data-loop="true" data-c="#428BCA" data-hc="#428BCA" title="view event"></i>

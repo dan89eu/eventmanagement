@@ -73,6 +73,8 @@ class SendEmails extends Command
 	        }
         }
 
+
+
 	    activity('emails:send')
 		    ->performedOn(new Campaign())
 		    ->log('sent:'.$count);

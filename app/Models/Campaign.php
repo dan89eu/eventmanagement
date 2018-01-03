@@ -83,6 +83,13 @@ class Campaign extends Model
 		return $this->name;
 	}
 
+	public function getStatusDescriptionAttribute()
+	{
+		$statuses = array('Manual','Scheduled','Sent','Opened','Clicked');
+
+		return $statuses[$this->status];
+	}
+
 	public function events()
 	{
 		return $this->belongsTo(Event::class, 'event_id','id');

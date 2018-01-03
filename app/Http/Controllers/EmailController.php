@@ -104,9 +104,9 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
-	    if($email->user_id != $this->getUserId()){
+	   /* if($email->user_id != $this->getUserId()){
 		    unset($email);
-	    }
+	    }*/
 
         if (empty($email)) {
             Flash::error('Email not found');
@@ -128,9 +128,9 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
-	    if($email->user_id != $this->getUserId()){
+	    /*if($email->user_id != $this->getUserId()){
 		    unset($email);
-	    }
+	    }*/
         if (empty($email)) {
             Flash::error('Email not found');
 
@@ -152,9 +152,9 @@ class EmailController extends InfyOmBaseController
     {
         $email = $this->emailRepository->findWithoutFail($id);
 
-	    if($email->user_id != $this->getUserId()){
+	    /*if($email->user_id != $this->getUserId()){
 		    unset($email);
-	    }
+	    }*/
         
                         if($request->has('type')){
 	                    $request->merge(['type' => 1]);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -82,6 +83,14 @@ class Category extends Model
 		return $this->emails()->where('type','=',1)->orderBy('id');
 	}
 
+	public function scopeManualemails()
+	{
+		return $this->emails()->where('type','=',2)->orderBy('id');
+	}
+
+	public function user(){
+		return $this->belongsTo(User::class);
+	}
 
 
 
