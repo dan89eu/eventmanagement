@@ -103,15 +103,27 @@ class EventController extends InfyOmBaseController
 		return response()->json($request->all());
 	}
 
-    /**
-     * Show the form for creating a new Event.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('admin.events.create');
-    }
+	/**
+	 * Show the form for creating a new Event.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		return view('admin.events.create');
+	}
+
+	/**
+	 * Show the form for creating a new Event.
+	 *
+	 * @return Response
+	 */
+	public function import()
+	{
+
+
+		return view('admin.events.create');
+	}
 
     /**
      * Store a newly created Event in storage.

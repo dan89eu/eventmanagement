@@ -7,6 +7,7 @@ use App\Helpers\Thumbnail;
 use App\Http\Controllers\JoshController;
 use App\Http\Requests;
 use App\Http\Requests\FileUploadRequest;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Response;
@@ -36,6 +37,30 @@ class FileController extends JoshController {
 		$fileItem->status = $request->get('status');
 		$fileItem->original_filename = $file_temp->getClientOriginalName();
 		$fileItem->save();
+
+		$file_temp->move($destinationPath, $safeName);
+
+		return $fileItem->toJson();
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param FileUploadRequest $request
+	 * @return Response
+	 */
+	public function import(FileUploadRequest $request)
+	{
+		$destinationPath = public_path() . '/uploads/imports/';
+
+		$file_temp = $request->file('file');
+		$extension       = $file_temp->getClientOriginalExtension() ?: 'png';
+		$safeName        = md5(Sentinel::getUser()->id).'.'.$extension;
+
+		$fileItem = new File();
+		$fileItem->filename = $safeName;
+		//$fileItem->mime = $file_temp->getMimeType();
+		//$fileItem->save();
 
 		$file_temp->move($destinationPath, $safeName);
 

@@ -43,9 +43,9 @@ Events
             </div>
             <div class="panel-body" style="display: none">
                 <div class="col-md-12" style="padding:30px;">
-                    {!! Form::open(array('url' => URL::to('admin/file/create'), 'method' => 'post', 'id'=>'myDropzone','class' => 'dropzone', 'files'=> true)) !!}
+                    {!! Form::open(array('url' => URL::to('admin/file/import'), 'method' => 'post', 'id'=>'myDropzone','class' => 'dropzone', 'files'=> true)) !!}
                     <div class="fallback">
-                        <input name="file" type="file" multiple />
+                        <input name="file" type="file"  />
                     </div>
                     {!! Form::close() !!}
                 </div>
@@ -105,7 +105,9 @@ Events
 					Dropzone.options.myDropzone = {
 						init: function() {
 							this.on("success", function(file,responseText) {
-								var obj = jQuery.parseJSON(responseText);
+
+								window.location.href =  "{{route('admin.events.import')}}";
+								/*var obj = jQuery.parseJSON(responseText);
 								file.id = obj.id;
 								file.filename = obj.filename;
 								// Create the remove button
@@ -130,7 +132,9 @@ Events
 								});
 
 								// Add the button to the file preview element.
-								file.previewElement.appendChild(removeButton);
+								file.previewElement.appendChild(removeButton);*/
+
+
 
 							});
 

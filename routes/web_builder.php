@@ -10,7 +10,7 @@ Route::post('events', ['as'=> 'events.store', 'uses' => 'EventController@store']
 
 	Route::get('events/email', ['as'=> 'events.email', 'uses' => 'EventController@email']);
 	Route::get('events/create', ['as'=> 'events.create', 'uses' => 'EventController@create']);
-	Route::get('events/import', ['as'=> 'events.import', 'uses' => 'EventController@create']);
+	Route::get('events/import', ['as'=> 'events.import', 'uses' => 'EventController@import']);
 	Route::get('events/data', ['as'=> 'events.data', 'uses' => 'EventController@data']);
 	Route::post('events/data2', ['as'=> 'events.editdata', 'uses' => 'EventController@editData']);
 	Route::post('events/{events}', ['as'=> 'events.updateJson', 'uses' => 'EventController@updateJson']);

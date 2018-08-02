@@ -132,6 +132,7 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin', 'middleware' => 'admin',
     Route::resource('blogcategory', 'BlogCategoryController');
     /*routes for file*/
     Route::group(['prefix' => 'file'], function () {
+	    Route::post('import', 'FileController@import')->name('import');
 	    Route::post('upload', 'FileController@upload')->name('upload');
 	    Route::post('create', 'FileController@store')->name('store');
         Route::post('createmulti', 'FileController@postFilesCreate')->name('postFilesCreate');
